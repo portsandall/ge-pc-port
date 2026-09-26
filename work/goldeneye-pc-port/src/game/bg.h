@@ -24,7 +24,7 @@ struct levelentry
 /* The segment token is intentionally 32-bit, but the host base is not.
  * Fold the 0x0fxxxxxx token in u32 space, then add that byte offset to the
  * full-width host pointer. This also makes stack/local probe buffers safe. */
-#define BG_SEG_TO_PTR(base, off) ((void *)((u8 *)(base) + (u32)((u32)(off) + 0xF1000000u)))
+#define BG_SEG_TO_PTR(base, off) ((void *)((u8 *)(base) + (u32)((u32)(uintptr_t)(off) + 0xF1000000u)))
 #else
 #define BG_SEG_TO_PTR(base, off) ((void *) (((u32) (base)) + (((u32) (off)) + 0xF1000000)))
 #endif
