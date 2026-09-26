@@ -314,7 +314,7 @@ void *memaAlloc(u32 amount) {
         best->addr = 0;
     }
 
-    return (void*)addr;
+    return (void *)(uintptr_t)(u32)addr;
 }
 
 // Find the memaspace of the given address and reduce its size by the given
@@ -569,7 +569,7 @@ s32 memaRealloc(s32 addr, u32 oldsize, u32 newsize)
 
     if ((oldsize > newsize))
     {
-        memaFree(addr + newsize, oldsize - newsize);
+        memaFree((void *)(uintptr_t)(u32)(addr + newsize), oldsize - newsize);
     }
     
 	return 1;

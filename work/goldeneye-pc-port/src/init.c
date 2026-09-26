@@ -80,6 +80,14 @@ OSMesgQueue *sched_cmdQ;
 
 void mainproc(void *args);
 
+#ifdef PORT
+static void rmonThreadEntry(void *arg)
+{
+    (void)arg;
+    rmonMain();
+}
+#endif
+
 
 
 /**
@@ -232,7 +240,7 @@ void idleproc(void *arg)
  */
 void idleCreateThread(void)
 {
-    osCreateThread(&idleThread, IDLE_THREAD_ID, idleproc, NULL, setSPToEnd(&sp_idle, sizeof(sp_idle)), IDLE_THREAD_PRIORITY);
+    osCreateThread(&idleThread, IDLE_THREAD_ID, idleproc, NULL, setSPToEnd(sp_idle, sizeof(sp_idle)), IDLE_THREAD_PRIORITY);
     osStartThread(&idleThread);
 }
 
@@ -243,7 +251,11 @@ void idleCreateThread(void)
  */
 void rmonCreateThread(void)
 {
-    osCreateThread(&rmonThread, RMON_THREAD_ID, rmonMain, NULL, setSPToEnd(&sp_rmon, sizeof(sp_rmon)), RMON_THREAD_PRIORITY);
+    #ifdef PORT
+    osCreateThread(&rmonThread, RMON_THREAD_ID, rmonThreadEntry, NULL, setSPToEnd(sp_rmon, sizeof(sp_rmon)), RMON_THREAD_PRIORITY);
+#else
+    osCreateThread(&rmonThread, RMON_THREAD_ID, rmonMain, NULL, setSPToEnd(sp_rmon, sizeof(sp_rmon)), RMON_THREAD_PRIORITY);
+#endif
     osStartThread(&rmonThread);
 }
 
@@ -253,7 +265,7 @@ void rmonCreateThread(void)
  */
 void schedulerInitThread(void)
 {
-    osCreateMesgQueue(&gfxFrameMsgQ, &gfxFrameMsgBuf, 32);
+    osCreateMesgQueue(&gfxFrameMsgQ, gfxFrameMsgBuf, 32);
     if (osTvType == OS_TV_MPAL)
     {
         osCreateScheduler(&os_scheduler, &shedThread, OS_VI_MPAL_LAN1, NUM_FIELDS);
@@ -263,7 +275,7 @@ void schedulerInitThread(void)
         osCreateScheduler(&os_scheduler, &shedThread, OS_VI_NTSC_LAN1, NUM_FIELDS);
     }
 
-    osScAddClient(&os_scheduler, &gfxClient, &gfxFrameMsgQ, NULL);
+    osScAddClient(&os_scheduler, gfxClient, &gfxFrameMsgQ, NULL);
     sched_cmdQ = osScGetCmdQ(&os_scheduler);
 }
 

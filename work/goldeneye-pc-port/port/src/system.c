@@ -23,7 +23,9 @@
   extern void abort(void);
   extern void exit(int status);
 #else
-  #define _POSIX_C_SOURCE 199309L
+  #ifndef _POSIX_C_SOURCE
+    #define _POSIX_C_SOURCE 199309L
+  #endif
   #include <unistd.h>
   /* The C stdlib shim deliberately avoids a global exit(int) prototype:
    * the reconstructed game has a legacy exit(void) declaration. This port
