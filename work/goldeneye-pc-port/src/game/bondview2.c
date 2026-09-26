@@ -991,7 +991,12 @@ void bondviewSetCameraMode(s32 arg0)
             solo_char_load();
 
             // HACK: ptr_animation_table->data regalloc is backwards
+#ifdef PORT
+            sp38 = (struct ModelAnimation *)((u8 *)ptr_animation_table +
+                    (u32)stage_intro_anim_table[g_IntroAnimationIndex].anonymous_0);
+#else
             sp38 = (struct ModelAnimation *)((s32)stage_intro_anim_table[g_IntroAnimationIndex].anonymous_0 + (s32)&ptr_animation_table->data);
+#endif
             sp78 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_2;
             ftemp_1 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_1;
             ftemp_3 = stage_intro_anim_table[g_IntroAnimationIndex].anonymous_3;
@@ -3386,7 +3391,7 @@ void sub_GAME_7F07E7CC(void) {
 
         animInit(watch, itemheader, g_CurrentPlayer->watchRwPool);
         modelSetScale(watch, c_item_entries[41].scale * 0.10000001f);
-        modelSetAnimation(watch, (ModelAnimation *)&ptr_animation_table->data[(s32)&ANIM_DATA_bond_watch], 0, 0.0f, 0.5f * watch_transition_time, 0.0f);
+        modelSetAnimation(watch, (ModelAnimation *)GE_ANIMDATA_PTR(bond_watch), 0, 0.0f, 0.5f * watch_transition_time, 0.0f);
         g_CurrentPlayer->step_in_view_watch_animation = 0; /* N64: *(s32*)(player+0x220) */
     }
 #else
@@ -4596,7 +4601,13 @@ void bondviewMoveAnimationTick(f32 speed, f32 speedforwards, f32 speedsideways)
             // HACK: ptr_animation_table dereference addition is backwards.
             // this should be:
             // ptr_animation_table->data[g_bondviewBondDeathAnimations[((u32) randomGetNext() % (u32) g_bondviewBondDeathAnimationsCount)]]
+#ifdef PORT
+            bheadStartDeathAnimation((struct ModelAnimation *)((u8 *)ptr_animation_table +
+                (u32)g_bondviewBondDeathAnimations[((u32)randomGetNext() % (u32)g_bondviewBondDeathAnimationsCount)]),
+                randomGetNext() & 1, 0.0f, 1.0f);
+#else
             bheadStartDeathAnimation((struct ModelAnimation *) ((s32)g_bondviewBondDeathAnimations[((u32) randomGetNext() % (u32) g_bondviewBondDeathAnimationsCount)] + (s32)&ptr_animation_table->data[0]), randomGetNext() & 1, 0.0f, 1.0f);
+#endif
             g_CurrentPlayer->startnewbonddie = FALSE;
         }
 
