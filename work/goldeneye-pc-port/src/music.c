@@ -626,7 +626,7 @@ extern u32 _musicsampletblSegmentRomStart;
  */
 void musicSeqFileNew(RareALSeqBankFile *file, u8 *base)
 {
-    s32 offset = (s32) base;
+    u32 offset = (u32)(uintptr_t)base;
     s32 i;
     
     /*
@@ -635,7 +635,7 @@ void musicSeqFileNew(RareALSeqBankFile *file, u8 *base)
     for (i = 0; i < file->seqCount; i++) {
         // D35: address is a u32 embedded value (was pointer-typed); the
         // rebase math is unchanged, result stays a 32-bit cart address.
-        file->seqArray[i].address += (u32)offset;
+        file->seqArray[i].address += offset;
     }
 }
 
@@ -653,8 +653,11 @@ void musicSeqPlayerInit(void)
     u32 ui;
     ALBankFile *instrumentBank; // sp 204
 
-    // This type/cast is not correct, but this is how it matches.
-    s32 tblSegmentRomStartAddress = (s32)&_musicsampletblSegmentRomStart; // ??
+#ifdef PORT
+    const void *tblSegmentRomStartAddress = (const void *)&_musicsampletblSegmentRomStart;
+#else
+    s32 tblSegmentRomStartAddress = (s32)&_musicsampletblSegmentRomStart;
+#endif
 
     ALSynConfig synconfig; // sp 164-192
     ALSeqpConfig track1SeqpConfig; // sp 136-160
@@ -683,7 +686,11 @@ void musicSeqPlayerInit(void)
 
     if (MUSIC_CONFIG_USE_SFX_BANK)
     {
+#ifdef PORT
+        size = (u32)((uintptr_t)&_sfxtblSegmentRomStart - (uintptr_t)&_sfxctlSegmentRomStart);
+#else
         size = (u32)&_sfxtblSegmentRomStart - (u32)&_sfxctlSegmentRomStart;
+#endif
 
 #if defined(__x86_64__) || defined(__aarch64__)
         // D37: the PC-native bank image is larger than the ROM segment
@@ -694,7 +701,7 @@ void musicSeqPlayerInit(void)
             size = romdataAudioBankPcSize((const u8 *)&_sfxctlSegmentRomStart, size);
             sfxBank = alHeapAlloc(&g_musicHeap, 1, size);
             romCopy(sfxBank, &_sfxctlSegmentRomStart, romSize);
-            romdataFixupAudioBank(sfxBank, romSize, size);
+            romdataFixupAudioBank((u8 *)sfxBank, romSize, size);
         }
 #else
         sfxBank = alHeapAlloc(&g_musicHeap, 1, size);
@@ -706,7 +713,11 @@ void musicSeqPlayerInit(void)
 
     if (MUSIC_CONFIG_USE_INSTRUMENT_BANK)
     {
+#ifdef PORT
+        size = (u32)((uintptr_t)&_instrumentstblSegmentRomStart - (uintptr_t)&_instrumentsctlSegmentRomStart);
+#else
         size = (u32)&_instrumentstblSegmentRomStart - (u32)&_instrumentsctlSegmentRomStart;
+#endif
 
 #if defined(__x86_64__) || defined(__aarch64__)
         // D37: as above.
@@ -715,7 +726,7 @@ void musicSeqPlayerInit(void)
             size = romdataAudioBankPcSize((const u8 *)&_instrumentsctlSegmentRomStart, size);
             instrumentBank = alHeapAlloc(&g_musicHeap, 1, size);
             romCopy(instrumentBank, &_instrumentsctlSegmentRomStart, romSize);
-            romdataFixupAudioBank(instrumentBank, romSize, size);
+            romdataFixupAudioBank((u8 *)instrumentBank, romSize, size);
         }
 #else
         instrumentBank = alHeapAlloc(&g_musicHeap, 1, size);
@@ -730,16 +741,24 @@ void musicSeqPlayerInit(void)
     // is this sizeof(RareALSeqBankFile) ? which implies the struct isn't right...
     size = 0x10;
     g_musicDataTable = alHeapAlloc(&g_musicHeap, 1, size);
+#ifdef PORT
+    romCopy(g_musicDataTable, tblSegmentRomStartAddress, size);
+#else
     romCopy(g_musicDataTable, (void *)tblSegmentRomStartAddress, size);
+#endif
     // D35: decode the BE header (+0 seqCount) and any entries that fit,
     // before seqCount is read below.
-    romdataFixupMusicSeqTable(g_musicDataTable, size);
+    romdataFixupMusicSeqTable((u8 *)g_musicDataTable, size);
 
     tblSegmentSize = (sizeof(RareALSeqData) * g_musicDataTable->seqCount) + 4;
     g_musicDataTable = alHeapAlloc(&g_musicHeap, 1, tblSegmentSize);
+#ifdef PORT
+    romCopy(g_musicDataTable, tblSegmentRomStartAddress, ALIGN16_a(tblSegmentSize));
+#else
     romCopy(g_musicDataTable, (void *)tblSegmentRomStartAddress, ALIGN16_a(tblSegmentSize));
+#endif
     // D35: the copy above reloaded raw BE bytes; decode the full table.
-    romdataFixupMusicSeqTable(g_musicDataTable, ALIGN16_a(tblSegmentSize));
+    romdataFixupMusicSeqTable((u8 *)g_musicDataTable, ALIGN16_a(tblSegmentSize));
 
     // end auReadSeqFileHeader
 
@@ -863,9 +882,9 @@ void musicTrack1Play(s32 track)
     while (alCSPGetState(g_musicXTrack1SeqPlayer))
         ;
 
-    romAddress = (void *)g_musicDataTable->seqArray[g_musicXTrack1CurrentTrackNum].address;
+    romAddress = (void *)(uintptr_t)g_musicDataTable->seqArray[g_musicXTrack1CurrentTrackNum].address;
 
-    if (romAddress < (void*)ROM_MUSIC_START_OFFSET)
+    if ((uintptr_t)romAddress < (uintptr_t)ROM_MUSIC_START_OFFSET)
     {
         // Note: recursive call
         musicTrack1Play(M_SHORT_SOLO_DEATH);
@@ -876,7 +895,7 @@ void musicTrack1Play(s32 track)
     t3 = ALIGN16_a(g_musicTrackLength[g_musicXTrack1CurrentTrackNum]) + ALIGN16_a(NUM_MUSIC_TRACKS);
     trackSizeBytes = ALIGN16_a(g_musicTrackCompressedLength[g_musicXTrack1CurrentTrackNum]);
     thing.seqData = g_musicXTrack1SeqData;
-    temp_a0 = (u8*)((t3 + (s32)thing.seqData) - trackSizeBytes);
+    temp_a0 = thing.seqData + t3 - trackSizeBytes;
 
     romCopy(temp_a0, romAddress, trackSizeBytes);
     decompressdata(temp_a0, thing.seqData, &hlist);
@@ -1057,9 +1076,9 @@ void musicTrack2Play(s32 track)
     while (alCSPGetState(g_musicXTrack2SeqPlayer))
         ;
 
-    romAddress = (void *)g_musicDataTable->seqArray[g_musicXTrack2CurrentTrackNum].address;
+    romAddress = (void *)(uintptr_t)g_musicDataTable->seqArray[g_musicXTrack2CurrentTrackNum].address;
 
-    if (romAddress < (void*)ROM_MUSIC_START_OFFSET)
+    if ((uintptr_t)romAddress < (uintptr_t)ROM_MUSIC_START_OFFSET)
     {
         // Note: recursive call
         musicTrack2Play(M_SHORT_SOLO_DEATH);
@@ -1070,7 +1089,7 @@ void musicTrack2Play(s32 track)
     t3 = ALIGN16_a(g_musicTrackLength[g_musicXTrack2CurrentTrackNum]) + ALIGN16_a(NUM_MUSIC_TRACKS);
     trackSizeBytes = ALIGN16_a(g_musicTrackCompressedLength[g_musicXTrack2CurrentTrackNum]);
     thing.seqData = g_musicXTrack2SeqData;
-    temp_a0 = (u8*)((t3 + (s32)thing.seqData) - trackSizeBytes);
+    temp_a0 = thing.seqData + t3 - trackSizeBytes;
 
     romCopy(temp_a0, romAddress, trackSizeBytes);
     decompressdata(temp_a0, thing.seqData, &hlist);
@@ -1250,9 +1269,9 @@ void musicTrack3Play(s32 track)
     while (alCSPGetState(g_musicXTrack3SeqPlayer))
         ;
 
-    romAddress = (void *)g_musicDataTable->seqArray[g_musicXTrack3CurrentTrackNum].address;
+    romAddress = (void *)(uintptr_t)g_musicDataTable->seqArray[g_musicXTrack3CurrentTrackNum].address;
 
-    if (romAddress < (void*)ROM_MUSIC_START_OFFSET)
+    if ((uintptr_t)romAddress < (uintptr_t)ROM_MUSIC_START_OFFSET)
     {
         // Note: recursive call
         musicTrack3Play(M_SHORT_SOLO_DEATH);
@@ -1263,7 +1282,7 @@ void musicTrack3Play(s32 track)
     t3 = ALIGN16_a(g_musicTrackLength[g_musicXTrack3CurrentTrackNum]) + ALIGN16_a(NUM_MUSIC_TRACKS);
     trackSizeBytes = ALIGN16_a(g_musicTrackCompressedLength[g_musicXTrack3CurrentTrackNum]);
     thing.seqData = g_musicXTrack3SeqData;
-    temp_a0 = (u8*)((t3 + (s32)thing.seqData) - trackSizeBytes);
+    temp_a0 = thing.seqData + t3 - trackSizeBytes;
 
     romCopy(temp_a0, romAddress, trackSizeBytes);
     decompressdata(temp_a0, thing.seqData, &hlist);
