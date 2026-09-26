@@ -29,7 +29,11 @@ struct Model *makeonebody(s32 body, s32 head, struct ModelFileHeader *bodyHeader
 {
     f32 scale;
     f32 pov;
+#ifdef PORT
+    ModelNode *opcode;
+#else
     s32 opcode;
+#endif
     ModelRwData_SwitchRecord *rwdata;
 
     scale = c_item_entries[body].scale * 0.10000001f;
@@ -56,7 +60,13 @@ struct Model *makeonebody(s32 body, s32 head, struct ModelFileHeader *bodyHeader
 
     if ((c_item_entries[body].hasHead == 0) && (head >= 0))
     {
+#ifdef PORT
+        /* Opcode is the first field of the node; the decomp's &Opcode value
+         * was really carrying the node pointer through s32 on N64. */
+        opcode = bodyHeader->Switches[4];
+#else
         opcode = &bodyHeader->Switches[4]->Opcode;
+#endif
         if (opcode != 0)
         {
             if (headHeader->RootNode == 0)

@@ -165,8 +165,12 @@ void sets_a_bunch_of_BONDdata_values_to_default(void)
     for (i=0; i<2; i++)
     {
         sub_GAME_7F0062C0(
+#ifdef PORT
+            (void *)(GE_ANIMDATA_BASE + (u32)g_BondMoveAnimationSetup[i].anim_id),
+#else
             // match hack: addu address calculated backwards
             (void*)((s32)g_BondMoveAnimationSetup[i].anim_id + (s32)&ptr_animation_table->data),
+#endif
             (s32)g_BondMoveAnimationSetup[i].loopframe,
             (s32)g_BondMoveAnimationSetup[i].endframe,
             &spD0);
@@ -176,7 +180,11 @@ void sets_a_bunch_of_BONDdata_values_to_default(void)
 
     renderData = D_8002A790;
 
+#ifdef PORT
+    modelSetAnimation(&g_CurrentPlayer->model, (struct ModelAnimation *)GE_ANIMDATA_PTR(idle), 0, 0.0f, 0.5f, 0.0f);
+#else
     modelSetAnimation(&g_CurrentPlayer->model, (struct ModelAnimation *)&ptr_animation_table->data[(s32)&ANIM_DATA_idle], 0, 0.0f, 0.5f, 0.0f);
+#endif
 
     subcalcpos(&g_CurrentPlayer->model);
     matrix_4x4_set_identity(&identityMatrix);
@@ -193,8 +201,12 @@ void sets_a_bunch_of_BONDdata_values_to_default(void)
 
     modelSetAnimation(
         &g_CurrentPlayer->model,
+#ifdef PORT
+        (struct ModelAnimation *)(GE_ANIMDATA_BASE + (u32)g_BondMoveAnimationSetup[g_CurrentPlayer->headanim].anim_id),
+#else
         // match hack: addu address calculated backwards
         (struct ModelAnimation *) ((s32)g_BondMoveAnimationSetup[g_CurrentPlayer->headanim].anim_id + (s32)&ptr_animation_table->data),
+#endif
         0,
         g_BondMoveAnimationSetup[g_CurrentPlayer->headanim].loopframe,
         0.5f,
