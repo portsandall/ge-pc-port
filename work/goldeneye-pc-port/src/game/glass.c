@@ -292,7 +292,11 @@ Gfx *glassRenderShards(Gfx *gdl)
             mtxf.m[3][1] -= g_CurrentPlayer->current_model_pos.y;
             mtxf.m[3][2] -= g_CurrentPlayer->current_model_pos.z;
 
+#ifdef PORT
+            matrix_4x4_f32_to_s32(mtxf.m, mtx->m);
+#else
             matrix_4x4_f32_to_s32(&mtxf, (Mtxf *)mtx);
+#endif
 
             gSPMatrix(gdl++, osVirtualToPhysical(mtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPVertex(gdl++, osVirtualToPhysical(&WINDOW_PIECE(i)->v1x), 3, 0);
@@ -302,8 +306,13 @@ Gfx *glassRenderShards(Gfx *gdl)
     #undef WINDOW_PIECE
 
     gSPClearGeometryMode(gdl++, G_LIGHTING | G_TEXTURE_GEN);
+#ifdef PORT
+    gSPMatrix(gdl++, osVirtualToPhysical(currentPlayerGetProjectionMatrix()), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+    gSPMatrix(gdl++, osVirtualToPhysical(currentPlayerGetMatrix10C8()), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#else
     gSPMatrix(gdl++, (u32)currentPlayerGetProjectionMatrix(), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
     gSPMatrix(gdl++, (u32)currentPlayerGetMatrix10C8(), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#endif
 
     return gdl;
 }

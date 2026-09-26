@@ -1945,8 +1945,13 @@ Gfx *set_enviro_fog_for_items_in_solo_watch_menu(Gfx *gdl, ITEM_IDS itemid, Mtxf
     {
         do
         {
+#ifdef PORT
+            matrix_4x4_copy(&((Model *)&model)->render_pos[i].pos, &sp74);
+            matrix_4x4_f32_to_s32(sp74.m, ((Model *)&model)->render_pos[i].view);
+#else
             matrix_4x4_copy((Mtxf *) (((u8 *) ((Model *) &model)->render_pos) + j), &sp74);
             matrix_4x4_f32_to_s32(&sp74, (Mtxf *) ((i << 6) + (u8 *) ((Model *) &model)->render_pos));
+#endif
             i++;
             j += 0x40;
         }
@@ -2102,8 +2107,13 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
 
     for (i = 0; i < objheader->numMatrices; i++)
     {
+#ifdef PORT
+        matrix_4x4_copy(&modelstack.render_pos[i].pos, &sp41c);
+        matrix_4x4_f32_to_s32(sp41c.m, modelstack.render_pos[i].view);
+#else
         matrix_4x4_copy((u32)modelstack.render_pos + i * sizeof(Mtxf), &sp41c);
         matrix_4x4_f32_to_s32(&sp41c, &modelstack.render_pos[i]);
+#endif
     }
 
     matrix_4x4_7F058C88();
@@ -2734,7 +2744,11 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     struct PropRecord *temp_v0_8;
     Weapon1PTransformKeyframe *sp74;
     f32 temp_f0_2;
+#ifdef PORT
+    Weapon1PTransformKeyframe *var_a0_2;
+#else
     u32 var_a0_2;
+#endif
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -2790,7 +2804,11 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     Weapon1PTransformKeyframe *sp74;
     struct PropRecord *temp_v0_8;
     f32 temp_f0_2;
+#ifdef PORT
+    Weapon1PTransformKeyframe *var_a0_2;
+#else
     u32 var_a0_2;
+#endif
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -2845,7 +2863,11 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
     Weapon1PTransformKeyframe *sp74;
     struct PropRecord *temp_v0_8;
     f32 temp_f0_2;
+#ifdef PORT
+    Weapon1PTransformKeyframe *var_a0_2;
+#else
     u32 var_a0_2;
+#endif
     f32 temp_v1_9;
     struct hand *temp_v1_5;
     f32 un_f32_num = 0.0f;
@@ -4067,11 +4089,19 @@ void gunTickHandState(enum GUNHAND hand, s32 triggerOn)
             || (handptr->weapon_action_state == GUN_ANIM_STATE_KNIFE_SLASH1_STRIKE)
             || (handptr->weapon_action_state == GUN_ANIM_STATE_KNIFE_SLASH1_RECOVER))
         {
+#ifdef PORT
+            var_a0_2 = (Weapon1PTransformKeyframe *)D_80034CA4;
+#else
             var_a0_2 = D_80034CA4;
+#endif
         }
         else
         {
+#ifdef PORT
+            var_a0_2 = (Weapon1PTransformKeyframe *)D_80034E0C;
+#else
             var_a0_2 = D_80034E0C;
+#endif
         }
 
         if (gunSample1PTransform(var_a0_2, sp88, &handptr->field_8EC, hand) != 0)
@@ -6157,9 +6187,17 @@ Gfx *generate_ammo_total_microcode(Gfx *gdl)
     s32 rightx;
     s32 reserveammo;
     s32 magammo;
+#ifdef PORT
+    uintptr_t imageoffset_r;
+#else
     u32 imageoffset_r;
+#endif
     s32 textwidth_r;
+#ifdef PORT
+    uintptr_t imageoffset_l;
+#else
     u32 imageoffset_l;
+#endif
     s32 textwidth_l;
 
     if (g_CurrentPlayer->gunammooff == 0)
@@ -6333,7 +6371,11 @@ Gfx *gunDrawWatchAmmoDisplay(Gfx *gdl)
     s32 ammotype;
     s32 reserveammo;
     s32 magammo;
+#ifdef PORT
+    uintptr_t imageoffset;
+#else
     u32 imageoffset;
+#endif
     s32 textwidth;
     s32 pad;
 
