@@ -48,7 +48,7 @@ REQUIRED: dict[str, list[tuple[str, str]]] = {
         ("f32 pointbuf[12];", "host intro swirl spline buffer must hold four coord3d points"),
     ],
     "src/game/bg.h": [
-        ("(u8 *)(base) + (u32)((u32)(off) + 0xF1000000u)", "BG segment rebasing must retain the full host base pointer"),
+        ("(u8 *)(base) + (u32)((u32)(uintptr_t)(off) + 0xF1000000u)", "BG segment rebasing must retain the full host base pointer and narrow only the segment token"),
         ("Visibility traversal state, not a pointer.", "US visibility queue next field must remain an integer token on PORT"),
         ("u32 next;", "US s_bound_info must preserve its 32-bit next field on PORT"),
     ],
