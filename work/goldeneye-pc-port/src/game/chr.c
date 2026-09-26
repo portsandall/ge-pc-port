@@ -298,320 +298,320 @@ f32 g_AiReactionSpeed = 1.0f;
 s32 g_SeenBondRecentlyGuardCount = 0;
 
 struct StruckAnim death_left_foot[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 0, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 0, 23.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_left_leg[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 0, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 0, 23.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_left_thigh[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_left_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_left_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_foot[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 0, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 0, 26.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_leg[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 0, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 0, 26.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_thigh[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_left_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_left_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, 0.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_pelvis[] = {
-    { PTR_ANIM_death_forward_face_down, 0, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_face_down, 1, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 0, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 1, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 0, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 1, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_fetal_position_right, 0, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 1, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 0, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 1, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_genitalia, 0, -1.0, 0.5, 0, 79.0, 415.0 },
-    { PTR_ANIM_death_genitalia, 1, -1.0, 0.5, 0, 79.0, 415.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 0, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 1, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 0, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 1, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 0, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 1, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 0, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 1, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_genitalia), 0, -1.0, 0.5, 0, 79.0, 415.0 },
+    { GE_ANIM_OFFSET_PTR(death_genitalia), 1, -1.0, 0.5, 0, 79.0, 415.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_head[] = {
-    { PTR_ANIM_death_forward_face_down, 0, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_face_down, 1, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 0, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 1, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 0, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 1, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_fetal_position_right, 0, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 1, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 0, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 1, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_neck, 0, -1.0, 0.5, 0, 87.0, 203.0 },
-    { PTR_ANIM_death_neck, 1, -1.0, 0.5, 0, 87.0, 203.0 },
-    { PTR_ANIM_death_head, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_head, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 0, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 1, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 0, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 1, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 0, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 1, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 0, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 1, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_neck), 0, -1.0, 0.5, 0, 87.0, 203.0 },
+    { GE_ANIM_OFFSET_PTR(death_neck), 1, -1.0, 0.5, 0, 87.0, 203.0 },
+    { GE_ANIM_OFFSET_PTR(death_head), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_head), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_left_hand[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 0, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 0, 23.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_left_arm[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 0, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 0, 23.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_left_shoulder[] = {
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 1, 23.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_hand[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 0, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 0, 26.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_arm[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 0, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 0, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 0, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 0, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 0, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 0, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 0, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 0, 26.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_right_shoulder[] = {
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 1, 26.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_chest[] = {
-    { PTR_ANIM_death_forward_face_down, 0, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_face_down, 1, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 0, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 1, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 0, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_right, 1, -1.0, 0.5, 1, 25.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 0, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_right, 1, -1.0, 0.5, 1, 23.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 0, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_down_left, 1, -1.0, 0.5, 1, 27.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 0, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_backward_spin_face_up_left, 1, -1.0, 0.5, 1, 26.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 0, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 1, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_fetal_position_right, 0, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 1, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 0, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 1, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 0, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 1, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 0, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_right), 1, -1.0, 0.5, 1, 25.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 0, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_right), 1, -1.0, 0.5, 1, 23.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 0, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_down_left), 1, -1.0, 0.5, 1, 27.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 0, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_spin_face_up_left), 1, -1.0, 0.5, 1, 26.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 0, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 1, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 0, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 1, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 0, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 1, -1.0, 0.5, 0, 28.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_gun[] = {
-    { PTR_ANIM_death_forward_face_down, 0, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_face_down, 1, -1.0, 0.5, 0, 55.0, 39.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_forward_spin_face_up, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 0, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up1, 1, -1.0, 0.5, 1, 29.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 0, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_hard, 1, -1.0, 0.5, 0, 97.0, 64.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, -1.0, 0.5, 0, 94.0, 66.0 },
-    { PTR_ANIM_death_fetal_position_right, 0, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 1, -1.0, 0.5, 0, 31.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 0, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_left, 1, -1.0, 0.5, 0, 36.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 0, -1.0, 0.5, 0, 28.0, -1.0 },
-    { PTR_ANIM_death_backward_fall_face_up2, 1, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, -1.0, 0.5, 0, 55.0, 39.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_spin_face_up), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 0, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up1), 1, -1.0, 0.5, 1, 29.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 0, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_hard), 1, -1.0, 0.5, 0, 97.0, 64.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, -1.0, 0.5, 0, 94.0, 66.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 0, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 1, -1.0, 0.5, 0, 31.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 0, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_left), 1, -1.0, 0.5, 0, 36.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 0, -1.0, 0.5, 0, 28.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_backward_fall_face_up2), 1, -1.0, 0.5, 0, 28.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim death_stagger[] = {
-    { PTR_ANIM_death_stagger_back_to_wall, 0, -1.0, 0.5, 0, 67.0, 54.0 },
-    { PTR_ANIM_death_stagger_back_to_wall, 1, -1.0, 0.5, 0, 67.0, 54.0 },
+    { GE_ANIM_OFFSET_PTR(death_stagger_back_to_wall), 0, -1.0, 0.5, 0, 67.0, 54.0 },
+    { GE_ANIM_OFFSET_PTR(death_stagger_back_to_wall), 1, -1.0, 0.5, 0, 67.0, 54.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_foot[] = {
-    { PTR_ANIM_hit_left_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_leg[] = {
-    { PTR_ANIM_hit_left_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_thigh[] = {
-    { PTR_ANIM_hit_left_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_left_leg, 1, 20.0, 0.40000001, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_left_leg), 1, 20.0, 0.40000001, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_foot[] = {
-    { PTR_ANIM_hit_right_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_leg[] = {
-    { PTR_ANIM_hit_right_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_thigh[] = {
-    { PTR_ANIM_hit_right_leg, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_leg, 1, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_left_leg, 0, 20.0, 0.40000001, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_leg), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_leg), 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_left_leg), 0, 20.0, 0.40000001, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_pelvis[] = {
-    { PTR_ANIM_death_genitalia, 0, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_genitalia, 1, 30.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 0, 15.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 1, 15.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 0, 10.0, 0.25, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_fetal_position_right, 1, 10.0, 0.25, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_genitalia), 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_genitalia), 1, 30.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 0, 10.0, 0.25, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_fetal_position_right), 1, 10.0, 0.25, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_head[] = {
-    { PTR_ANIM_death_neck, 0, 15.0, 0.5, 0, 87.0, 203.0 },
-    { PTR_ANIM_death_neck, 1, 15.0, 0.5, 0, 87.0, 203.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 0, 15.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 1, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_neck), 0, 15.0, 0.5, 0, 87.0, 203.0 },
+    { GE_ANIM_OFFSET_PTR(death_neck), 1, 15.0, 0.5, 0, 87.0, 203.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, 15.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_hand[] = {
-    { PTR_ANIM_hit_left_hand, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_hand, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_hand), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_hand), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_arm[] = {
-    { PTR_ANIM_hit_left_arm, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_arm, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_arm), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_arm), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_left_shoulder[] = {
-    { PTR_ANIM_hit_left_shoulder, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_right_shoulder, 1, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_shoulder), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_shoulder), 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, 20.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_hand[] = {
-    { PTR_ANIM_hit_right_hand, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_hand, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_hand), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_hand), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_arm[] = {
-    { PTR_ANIM_hit_right_arm, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_arm, 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_arm), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_arm), 1, -1.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_right_shoulder[] = {
-    { PTR_ANIM_hit_right_shoulder, 0, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_hit_left_shoulder, 1, -1.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_right_shoulder), 0, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(hit_left_shoulder), 1, -1.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, 20.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_chest[] = {
-    { PTR_ANIM_death_forward_face_down_soft, 0, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 0, 15.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 1, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, 15.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
 struct StruckAnim flinch_gun[] = {
-    { PTR_ANIM_death_forward_face_down_soft, 0, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down_soft, 1, 20.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 0, 15.0, 0.5, 0, -1.0, -1.0 },
-    { PTR_ANIM_death_forward_face_down, 1, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 0, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down_soft), 1, 20.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 0, 15.0, 0.5, 0, -1.0, -1.0 },
+    { GE_ANIM_OFFSET_PTR(death_forward_face_down), 1, 15.0, 0.5, 0, -1.0, -1.0 },
     {0, 0, -1.0, 0.5, 0, -1.0, -1.0}
 };
 
@@ -672,7 +672,7 @@ struct weapon_firing_animation_table rifle_firing_animation_group1[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_rifle_firing_animation_group1 = { &rifle_firing_animation_group1, -1 };
+struct anim_group_info ptr_rifle_firing_animation_group1 = { rifle_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table rifle_firing_animation_group2[] = {
     { PTR_ANIM_fire_standing, 37.0, 0, 0, 0, -1.0, 30.0, 81.0, -1.0, -1.0, 25.0, 81.0, 0.87266463, -0.69813174, 0.69813174, -0.69813174, 1.6, 1.75 },
@@ -680,7 +680,7 @@ struct weapon_firing_animation_table rifle_firing_animation_group2[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_rifle_firing_animation_group2 = { &rifle_firing_animation_group2, -1 };
+struct anim_group_info ptr_rifle_firing_animation_group2 = { rifle_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table rifle_firing_animation_group5[] = {
     { PTR_ANIM_fire_standing, 37.0, 0, 0, 0, -1.0, 30.0, 81.0, -1.0, -1.0, 25.0, 81.0, 0.87266463, -0.69813174, 0.69813174, -0.69813174, 1.6, 1.75 },
@@ -688,21 +688,21 @@ struct weapon_firing_animation_table rifle_firing_animation_group5[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_rifle_firing_animation_group5 = { &rifle_firing_animation_group5, -1 };
+struct anim_group_info ptr_rifle_firing_animation_group5 = { rifle_firing_animation_group5, -1 };
 
 struct weapon_firing_animation_table rifle_firing_animation_group3[] = {
     { PTR_ANIM_fire_shoulder_left, 19.0, 0, 1.5707964, 0, -1.0, 19.0, 61.0, -1.0, -1.0, 14.0, 61.0, 0.87266463, -0.34906587, 0.43633232, -1.0471976, 2.5, 2.5 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_rifle_firing_animation_group3 = { &rifle_firing_animation_group3, -1 };
+struct anim_group_info ptr_rifle_firing_animation_group3 = { rifle_firing_animation_group3, -1 };
 
 struct weapon_firing_animation_table rifle_firing_animation_group4[] = {
     { PTR_ANIM_fire_turn_right2, 27.0, 0, 0, 0, -1.0, 39.0, 74.0, -1.0, -1.0, 34.0, 74.0, 0.87266463, -0.69813174, 0.78539819, -0.69813174, 1.5, 1.5 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_rifle_firing_animation_group4 = { &rifle_firing_animation_group4, -1 };
+struct anim_group_info ptr_rifle_firing_animation_group4 = { rifle_firing_animation_group4, -1 };
 
 struct anim_group_info *ptr_rifle_firing_animation_groups[] = {
     &ptr_rifle_firing_animation_group1,
@@ -747,7 +747,7 @@ struct weapon_firing_animation_table pistol_firing_animation_group1[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group1 = { &pistol_firing_animation_group1, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group1 = { pistol_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table pistol_firing_animation_group2[] = {
     { PTR_ANIM_fire_standing_one_handed_weapon, 26.0, 0, 0, 12.0, 140.0, 58.0, 92.0, 60.0, 79.0, 20.0, 120.0, 0.87266463, -0.69813174, 0.69813174, -0.69813174, 0.0, 0.0 },
@@ -755,7 +755,7 @@ struct weapon_firing_animation_table pistol_firing_animation_group2[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group2 = { &pistol_firing_animation_group2, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group2 = { pistol_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table pistol_firing_animation_group3[] = {
     { PTR_ANIM_fire_standing_one_handed_weapon, 26.0, 0, 0, 12.0, 140.0, 58.0, 92.0, 60.0, 79.0, 20.0, 120.0, 0.87266463, -0.69813174, 0.69813174, -0.69813174, 0.0, 0.0 },
@@ -765,7 +765,7 @@ struct weapon_firing_animation_table pistol_firing_animation_group3[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group3 = { &pistol_firing_animation_group3, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group3 = { pistol_firing_animation_group3, -1 };
 
 struct weapon_firing_animation_table pistol_firing_animation_group6[] = {
     { PTR_ANIM_fire_standing_one_handed_weapon, 26.0, 0, 0, 12.0, 140.0, 58.0, 92.0, 60.0, 79.0, 20.0, 120.0, 0.87266463, -0.69813174, 0.69813174, -0.69813174, 0.0, 0.0 },
@@ -775,21 +775,21 @@ struct weapon_firing_animation_table pistol_firing_animation_group6[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group6 = { &pistol_firing_animation_group6, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group6 = { pistol_firing_animation_group6, -1 };
 
 struct weapon_firing_animation_table pistol_firing_animation_group4[] = {
     { PTR_ANIM_fire_standing_left_one_handed_weapon_fast, 19.0, 0, 1.5707964, 5.0, 76.0, 20.0, 31.0, 31.0, 38.0, 15.0, 49.0, 0.87266463, -0.69813174, 0.52359879, -1.0471976, 0.0, 0.0 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group4 = { &pistol_firing_animation_group4, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group4 = { pistol_firing_animation_group4, -1 };
 
 struct weapon_firing_animation_table pistol_firing_animation_group5[] = {
     { PTR_ANIM_fire_step_right_one_handed_weapon, 19.0, 0, 4.712389, 4.0, 79.0, 21.0, 50.0, 26.0, 42.0, 10.0, 64.0, 0.87266463, -0.69813174, 0.69813174, -0.61086529, 0.0, 0.0 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_pistol_firing_animation_group5 = { &pistol_firing_animation_group5, -1 };
+struct anim_group_info ptr_pistol_firing_animation_group5 = { pistol_firing_animation_group5, -1 };
 
 struct anim_group_info *ptr_pistol_firing_animation_groups[] = {
     &ptr_pistol_firing_animation_group1,
@@ -831,7 +831,7 @@ struct weapon_firing_animation_table doubles_firing_animation_group1[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_doubles_firing_animation_group1 = { &doubles_firing_animation_group1, -1 };
+struct anim_group_info ptr_doubles_firing_animation_group1 = { doubles_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table doubles_firing_animation_group2[] = {
     { PTR_ANIM_fire_standing_dual_wield_left, 26.0, 0, 1.5707964, 9.0, 112.0, 38.0, 87.0, -1.0, -1.0, 19.0, 98.0, 0.87266463, -0.69813174, 0.43633232, -0.43633232, 0.0, 0.0 },
@@ -839,7 +839,7 @@ struct weapon_firing_animation_table doubles_firing_animation_group2[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_doubles_firing_animation_group2 = { &doubles_firing_animation_group2, -1 };
+struct anim_group_info ptr_doubles_firing_animation_group2 = { doubles_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table doubles_firing_animation_group3[] = {
     { PTR_ANIM_fire_standing_dual_wield_right, 39.0, 0, 4.712389, 22.0, 127.0, 44.0, 102.0, -1.0, -1.0, 28.0, 112.0, 0.87266463, -0.69813174, 0.43633232, -0.43633232, 0.0, 0.0 },
@@ -847,7 +847,7 @@ struct weapon_firing_animation_table doubles_firing_animation_group3[] = {
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_doubles_firing_animation_group3 = { &doubles_firing_animation_group3, -1 };
+struct anim_group_info ptr_doubles_firing_animation_group3 = { doubles_firing_animation_group3, -1 };
 
 struct anim_group_info *ptr_doubles_firing_animation_groups[] = {
     &ptr_doubles_firing_animation_group1,
@@ -898,21 +898,21 @@ struct weapon_firing_animation_table crouched_rifle_firing_animation_groupA[] = 
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_rifle_firing_animation_group1 = { &crouched_rifle_firing_animation_group1, -1 };
+struct anim_group_info ptr_crouched_rifle_firing_animation_group1 = { crouched_rifle_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table crouched_rifle_firing_animation_group2[] = {
     { PTR_ANIM_fire_kneel_left, 26.0, 0, 0, 0, -1.0, 34.0, 87.0, -1.0, -1.0, 29.0, 87.0, 0.87266463, -0.52359879, 0.69813174, -0.95993108, 1.6, 2.0 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_rifle_firing_animation_group2 = { &crouched_rifle_firing_animation_group2, -1 };
+struct anim_group_info ptr_crouched_rifle_firing_animation_group2 = { crouched_rifle_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table crouched_rifle_firing_animation_group3[] = {
     { PTR_ANIM_fire_kneel_right, 28.0, 0, 0, 0, -1.0, 36.0, 88.0, -1.0, -1.0, 31.0, 88.0, 0.87266463, -0.69813174, 0.87266463, -0.43633232, 1.6, 1.5 },
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_rifle_firing_animation_group3 = { &crouched_rifle_firing_animation_group3, -1 };
+struct anim_group_info ptr_crouched_rifle_firing_animation_group3 = { crouched_rifle_firing_animation_group3, -1 };
 
 struct anim_group_info *ptr_crouched_rifle_firing_animation_groups[] = {
     &ptr_crouched_rifle_firing_animation_group1,
@@ -955,7 +955,7 @@ struct weapon_firing_animation_table crouched_pistol_firing_animation_group1[] =
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_pistol_firing_animation_group1 = { &crouched_pistol_firing_animation_group1, -1 };
+struct anim_group_info ptr_crouched_pistol_firing_animation_group1 = { crouched_pistol_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table crouched_pistol_firing_animation_group2[] = {
     { PTR_ANIM_fire_kneel_left_one_handed_weapon_slow, 47.0, 0, 1.5707964, 7.0, 128.0, 33.0, 86.0,47.0, 74.0, 23.0, 106.0, 0.87266463, -0.52359879, 0.52359879, -0.78539819, 0.0, 0.0 },
@@ -964,7 +964,7 @@ struct weapon_firing_animation_table crouched_pistol_firing_animation_group2[] =
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_pistol_firing_animation_group2 = { &crouched_pistol_firing_animation_group2, -1 };
+struct anim_group_info ptr_crouched_pistol_firing_animation_group2 = { crouched_pistol_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table crouched_pistol_firing_animation_group3[] = {
     { PTR_ANIM_fire_kneel_right_one_handed_weapon_slow, 28.0, 0, 4.712389, 15.0, 124.0, 38.0, 97.0, 60.0, 84.0, 20.0, 106.0, 0.87266463, -0.69813174, 0.52359879, -0.87266463, 0.0, 0.0 },
@@ -972,7 +972,7 @@ struct weapon_firing_animation_table crouched_pistol_firing_animation_group3[] =
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_pistol_firing_animation_group3 = { &crouched_pistol_firing_animation_group3, -1 };
+struct anim_group_info ptr_crouched_pistol_firing_animation_group3 = { crouched_pistol_firing_animation_group3, -1 };
 
 struct anim_group_info *ptr_crouched_pistol_firing_animation_groups[] = {
     &ptr_crouched_pistol_firing_animation_group1,
@@ -1015,7 +1015,7 @@ struct weapon_firing_animation_table crouched_doubles_firing_animation_group1[] 
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_doubles_firing_animation_group1 = { &crouched_doubles_firing_animation_group1, -1 };
+struct anim_group_info ptr_crouched_doubles_firing_animation_group1 = { crouched_doubles_firing_animation_group1, -1 };
 
 struct weapon_firing_animation_table crouched_doubles_firing_animation_group2[] = {
     { PTR_ANIM_fire_kneel_dual_wield_left, 28.0, 0, 1.5707964, 15.0, 108.0, 34.0, 73.0, -1.0, -1.0, 17.0, 93.0, 0.87266463, -0.69813174, 0.52359879, -0.78539819, 0.0, 0.0 },
@@ -1023,7 +1023,7 @@ struct weapon_firing_animation_table crouched_doubles_firing_animation_group2[] 
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_doubles_firing_animation_group2 = { &crouched_doubles_firing_animation_group2, -1 };
+struct anim_group_info ptr_crouched_doubles_firing_animation_group2 = { crouched_doubles_firing_animation_group2, -1 };
 
 struct weapon_firing_animation_table crouched_doubles_firing_animation_group3[] = {
     { PTR_ANIM_fire_kneel_dual_wield_right, 31.0, 0, 4.712389, 14.0, 111.0, 40.0, 83.0,-1.0, -1.0, 21.0, 94.0, 0.87266463, -0.69813174, 0.52359879, -0.78539819, 0.0, 0.0 },
@@ -1031,7 +1031,7 @@ struct weapon_firing_animation_table crouched_doubles_firing_animation_group3[] 
     {0, 0.0, 0, 0, 0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
 };
 
-struct anim_group_info ptr_crouched_doubles_firing_animation_group3 = { &crouched_doubles_firing_animation_group3, -1 };
+struct anim_group_info ptr_crouched_doubles_firing_animation_group3 = { crouched_doubles_firing_animation_group3, -1 };
 
 struct anim_group_info* ptr_crouched_doubles_firing_animation_groups[] = {
     &ptr_crouched_doubles_firing_animation_group1,
