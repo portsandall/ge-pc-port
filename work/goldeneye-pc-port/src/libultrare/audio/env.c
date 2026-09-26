@@ -19,6 +19,9 @@
  *====================================================================*/
 
 #include <PR/libaudio.h>
+#ifdef PORT
+#include <stdint.h>
+#endif
 #include <audio/synthInternals.h>
 #include <PR/os.h>
 #include <assert.h>
@@ -150,7 +153,11 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
                           s32 i;
                       } data;                    
                       data.f = param->pitch;
+#ifdef PORT
+                      (*f->source->setParam)(f->source, AL_FILTER_SET_PITCH, (void *)(intptr_t)data.i);
+#else
                       (*f->source->setParam)(f->source, AL_FILTER_SET_PITCH, (void *)data.i);
+#endif
                   }
                   
               }
@@ -278,7 +285,11 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
                 * */
                ptr = _pullSubFrame(e, &inp, &loutp, samples, sampleOffset, ptr);
                e->delta += samples;
+#ifdef PORT
+               (*e->filter.setParam)(&e->filter, e->ctrlList->type, (void *)(intptr_t)e->ctrlList->data.i);
+#else
                (*e->filter.setParam)(&e->filter, e->ctrlList->type, (void *) e->ctrlList->data.i);
+#endif
             }
             break;
         }

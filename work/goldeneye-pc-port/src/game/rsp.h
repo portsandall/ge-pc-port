@@ -2,6 +2,9 @@
 #define _RSP_H_
 
 #include <ultra64.h>
+#ifdef PORT
+#include <stdint.h>
+#endif
 
 #include <sched.h>
 #include <PR/gbi.h>
@@ -14,7 +17,11 @@
  */ 
 struct GfxInfo_s {
     OSScTask task;
+#ifdef PORT
+    uintptr_t cfb;
+#else
     u32 cfb;
+#endif
     u32 unk5C;
 };
 

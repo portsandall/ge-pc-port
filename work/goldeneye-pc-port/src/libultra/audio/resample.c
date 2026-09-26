@@ -19,6 +19,9 @@
  *====================================================================*/
 
 #include <libaudio.h>
+#ifdef PORT
+#include <stdint.h>
+#endif
 #include "synthInternals.h"
 #include <os.h>
 
@@ -129,7 +132,11 @@ s32 alResampleParam(void *filter, s32 paramID, void *param)
             break;
             
         case (AL_FILTER_SET_PITCH):
+#ifdef PORT
+            data.i = (s32)(intptr_t)param;
+#else
             data.i = (s32) param;
+#endif
             r->ratio = data.f;
             break;
             

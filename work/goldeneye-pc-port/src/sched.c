@@ -1,4 +1,7 @@
 #include <ultra64.h>
+#ifdef PORT
+#include <stdint.h>
+#endif
 #include <PR/os.h>
 #include "init.h"
 #include "sched.h"
@@ -28,6 +31,12 @@
 #define RSP_DONE_MSG    667
 #define RDP_DONE_MSG    668
 #define PRE_NMI_MSG     669
+
+#ifdef PORT
+#define SC_MSG_VALUE(m) ((intptr_t)(m))
+#else
+#define SC_MSG_VALUE(m) ((s32)(m))
+#endif
 
 
 #define OS_SC_DP                0x0001
@@ -253,7 +262,7 @@ void __scMain(void *arg)
     {        
         osRecvMesg(&sc->interruptQ, &msg, OS_MESG_BLOCK);
 
-        switch ((s32)msg)
+        switch (SC_MSG_VALUE(msg))
         {
             case VIDEO_MSG:
                 __scHandleRetrace(sc);
@@ -303,7 +312,7 @@ void __scMain(void *arg)
         do
         {
             osRecvMesg(&sc->interruptQ, &msg, OS_MESG_BLOCK);
-        } while((s32)msg != VIDEO_MSG);
+        } while(SC_MSG_VALUE(msg) != VIDEO_MSG);
 
         joyPoll();
     }

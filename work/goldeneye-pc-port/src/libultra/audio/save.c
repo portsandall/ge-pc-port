@@ -19,6 +19,9 @@
  *====================================================================*/
 
 #include <libaudio.h>
+#ifdef PORT
+#include <stdint.h>
+#endif
 #include "synthInternals.h"
 #include <os.h>
 #if defined(__x86_64__) || defined(__aarch64__)
@@ -48,7 +51,11 @@ s32 alSaveParam(void *filter, s32 paramID, void *param)
 {
     ALSave *a = (ALSave *) filter;
     ALFilter *f = (ALFilter *) filter;
+#ifdef PORT
+    s32 pp = (s32)(intptr_t)param;
+#else
     s32 pp = (s32) param;
+#endif
 
     switch (paramID) {
         case (AL_FILTER_SET_SOURCE):
