@@ -87,6 +87,20 @@ REQUIRED: dict[str, list[tuple[str, str]]] = {
     "src/game/gunfire.c": [
         ("Model model;", "watch-menu temporary model must have full host-width Model storage"),
     ],
+    "src/music.c": [
+        ("u32 offset = (u32)(uintptr_t)base;", "music sequence cart-token rebasing must narrow explicitly"),
+        ("const void *tblSegmentRomStartAddress", "music table linker symbol must remain a host pointer on PORT"),
+        ("temp_a0 = thing.seqData + t3 - trackSizeBytes;", "music decompression scratch pointer must use native pointer arithmetic"),
+    ],
+    "src/libultra/audio/load.c": [
+        ("#define AUDIO_ADDR32(p) ((s32)(u32)(uintptr_t)(p))", "libaudio wavetable base must narrow only at the 32-bit DMA boundary"),
+    ],
+    "src/audi.c": [
+        ("cmdlp - g_AudioManager.cmdList[g_CurrentAcmdList]", "audio task size must use native pointer subtraction"),
+    ],
+    "port/src/romdata.c": [
+        ("uintptr_t sfxCtl = (uintptr_t)&_sfxctlSegmentRomStart;", "ROM segment arithmetic must stay host-width until validated"),
+    ],
 }
 
 for root in SCAN_ROOTS:
