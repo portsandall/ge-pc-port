@@ -887,13 +887,13 @@ void load_bg_file(LEVEL_INDEX levelid)
     size = (((((u32) ptr_bgdata_room_fileposition_list[1].pPointTableBin) & 0x00ffffff) - 1) | 0xf) + 1;
 #endif
  
-    ptr_bg_data = (s32) mempAllocBytesInBank(size, 4);
-    obLoadBGFileBytesAtOffset(levelinfotable[levelentry_index].bg_seg_filename, (u8 *) ptr_bg_data, 0, size);
+    ptr_bg_data = (s32)(u32)(uintptr_t)mempAllocBytesInBank(size, 4);
+    obLoadBGFileBytesAtOffset(levelinfotable[levelentry_index].bg_seg_filename, (u8 *)(uintptr_t)(u32)ptr_bg_data, 0, size);
  
-    gptr_stan = (s32) _fileNameLoadToBank(levelinfotable[levelentry_index].bg_stan_filename, 2, 0, 4);
+    gptr_stan = (s32)(u32)(uintptr_t)_fileNameLoadToBank(levelinfotable[levelentry_index].bg_stan_filename, 2, 0, 4);
  
-    stanDetermineEOF((struct StanPrefixRecord *) gptr_stan, 0, (u8 *) gptr_stan);
-    stanLoadFile((struct StanPrefixRecord *) gptr_stan);
+    stanDetermineEOF((struct StanPrefixRecord *)(uintptr_t)(u32)gptr_stan, 0, (u8 *)(uintptr_t)(u32)gptr_stan);
+    stanLoadFile((struct StanPrefixRecord *)(uintptr_t)(u32)gptr_stan);
  
     sub_GAME_7F0B4810(levelinfotable[levelentry_index].levelscale);
     setLevelScale(levelinfotable[levelentry_index].levelscale);
@@ -905,15 +905,15 @@ void load_bg_file(LEVEL_INDEX levelid)
     sub_GAME_7F08976C(mCurrentLevelVisibilityScale);
     matrix_4x4_7F058C4C(mCurrentLevelVisibilityScale);
  
-    data = (s32 *)ptr_bg_data;
+    data = (s32 *)(uintptr_t)(u32)ptr_bg_data;
     dword_CODE_bss_8007BF98 = *data;
     dword_CODE_bss_8007FF88 = 1;
  
     if (dword_CODE_bss_8007BF98 == 0)
     {
         dword_CODE_bss_8007FF88 = 2;
-        ptr_bgdata_offsets = (s32)data;
-        ptr_bgdata_room_fileposition_list = (bg_room_data *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[1]);
+        ptr_bgdata_offsets = (s32)(u32)(uintptr_t)data;
+        ptr_bgdata_room_fileposition_list = (bg_room_data *) BG_SEG_TO_PTR(data, ((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[1]);
         
         // Keep this fake goto for matching.
         goto dummy_label_543534; dummy_label_543534: ;
@@ -925,25 +925,25 @@ void load_bg_file(LEVEL_INDEX levelid)
             g_MaxNumRooms++;  
         }
  
-        g_BgPortals = (bg_portal_data_entry *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[2]);
+        g_BgPortals = (bg_portal_data_entry *) BG_SEG_TO_PTR(data, ((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[2]);
 
         if (1);
 
-        if (((s32 *)ptr_bgdata_offsets)[3] == 0)
+        if (((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[3] == 0)
         {
             dword_CODE_bss_8007FF90 = 0;
         }
         else
         {
-            dword_CODE_bss_8007FF90 = (s32 *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[3]);
+            dword_CODE_bss_8007FF90 = (s32 *) BG_SEG_TO_PTR(data, ((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[3]);
  
-            if (((s32 *)ptr_bgdata_offsets)[4] == 0)
+            if (((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[4] == 0)
             {
                 dword_CODE_bss_8007FF94 = NULL;
             }
             else
             {
-                dword_CODE_bss_8007FF94 = (f32 *) BG_SEG_TO_PTR(data, ((s32 *)ptr_bgdata_offsets)[4]);
+                dword_CODE_bss_8007FF94 = (f32 *) BG_SEG_TO_PTR(data, ((s32 *)(uintptr_t)(u32)ptr_bgdata_offsets)[4]);
             }
         }
  
@@ -958,7 +958,7 @@ void load_bg_file(LEVEL_INDEX levelid)
             {
                 if (((bg_envdata_entry_local *)dword_CODE_bss_8007FF90)[i].type == ENVIRONMENTDATA_ALT)
                 {
-                    ((bg_envdata_entry_local *)dword_CODE_bss_8007FF90)[i].data = getIndexOfPORTALID((s32) BG_SEG_TO_PTR(ptr_bg_data, ((bg_envdata_entry_local *)dword_CODE_bss_8007FF90)[i].data));
+                    ((bg_envdata_entry_local *)dword_CODE_bss_8007FF90)[i].data = getIndexOfPORTALID(BG_SEG_TO_PTR((void *)(uintptr_t)(u32)ptr_bg_data, ((bg_envdata_entry_local *)dword_CODE_bss_8007FF90)[i].data));
                 }
             }
         }
@@ -977,7 +977,7 @@ void load_bg_file(LEVEL_INDEX levelid)
  
                 if (primaryindex <= secondaryindex)
                 {
-                    g_BgRoomInfo[i].csize_primary_DL_binary = ((s32) ptr_bgdata_room_fileposition_list[primaryindex].pPriMappingBin) - ((s32) ptr_bgdata_room_fileposition_list[i].pPriMappingBin);
+                    g_BgRoomInfo[i].csize_primary_DL_binary = (s32)((uintptr_t)ptr_bgdata_room_fileposition_list[primaryindex].pPriMappingBin - (uintptr_t)ptr_bgdata_room_fileposition_list[i].pPriMappingBin);
                 }
                 else
                 {
@@ -2280,6 +2280,24 @@ u8 getROOMID_isNeighborToRendered(s32 roomID)
 }
 
 
+#ifdef PORT
+s32 getIndexOfPORTALID(const void *portalPtr)
+{
+    s32 i;
+
+    for (i = 0; g_BgPortals[i].offset_portal != NULL; i++)
+    {
+        if (portalPtr == (const void *)g_BgPortals[i].offset_portal)
+        {
+            return i;
+        }
+    }
+#ifdef DEBUG
+    osSyncPrintf("bg: bgPortalIndexFromPtr(): No portal found for %p ", portalPtr);
+#endif
+    return 0;
+}
+#else
 s32 getIndexOfPORTALID(s32 portalID)
 {
     s32 i;
@@ -2291,11 +2309,12 @@ s32 getIndexOfPORTALID(s32 portalID)
             return i;
         }
     }
-    #ifdef DEBUG
+#ifdef DEBUG
     osSyncPrintf("bg: bgPortalIndexFromPtr(): No portal found for %08x ",portalID);
-    #endif
+#endif
     return 0;
 }
+#endif
 
 
 void roomsHandleStateDebugging(void)
@@ -2524,7 +2543,7 @@ s32 bgLoadRoomPrimaryGdl(s32 roomnum, u8 *dst, s32 allocsize)
     fileoffset = (u32)ptr_bgdata_room_fileposition_list[roomnum].pPriMappingBin;
     fileoffset += 0xf1000000;
 #else
-    fileoffset = (s32)((u8 *)ptr_bgdata_room_fileposition_list[roomnum].pPriMappingBin + ptr_bg_data) - ptr_bg_data;
+    fileoffset = (s32)(u32)(uintptr_t)ptr_bgdata_room_fileposition_list[roomnum].pPriMappingBin;
     fileoffset += 0xf1000000;
 #endif
 
@@ -2646,7 +2665,7 @@ s32 bgLoadRoomSecondaryGdl(s32 roomnum, u8 *dst, s32 allocsize)
     fileoffset = (u32)ptr_bgdata_room_fileposition_list[roomnum].pSecMappingBin;
     fileoffset += 0xf1000000;
 #else
-    fileoffset = (s32)((u8 *)ptr_bgdata_room_fileposition_list[roomnum].pSecMappingBin + ptr_bg_data)  - ptr_bg_data;
+    fileoffset = (s32)(u32)(uintptr_t)ptr_bgdata_room_fileposition_list[roomnum].pSecMappingBin;
     fileoffset += 0xf1000000;
 #endif
 
@@ -2809,7 +2828,7 @@ void bgLoadRoomModelData(s32 roomID)
     // If wasted space is detected, shrink allocated memory block.
     if (allocsize != ((used + 0x20) & ~0xf))
     {
-        memaRealloc((s32)data, allocsize, ((used + 0x20) & ~0xf));
+        memaRealloc((s32)(u32)(uintptr_t)data, allocsize, ((used + 0x20) & ~0xf));
     }
 
     // Same branches, only the LUT parameter changes
@@ -3161,7 +3180,7 @@ void bgBuildRoomVtxBounds(s32 roomID)
             numvertices = ((gdl[cmdindex].dma.par >> 4) & 0xf) + 1;
 #endif
 
-            vtx = (Vtx *)(SEGMENT_OFFSET(gdl[cmdindex].dma.addr) + (u32)vertices);
+            vtx = (Vtx *)((u8 *)vertices + SEGMENT_OFFSET(gdl[cmdindex].dma.addr));
 
 #if defined(PORT)
             /* TEMP D69 safety net: the room primary/secondary DL binaries
@@ -3583,7 +3602,7 @@ bool bgTestRayIntersectionInRoom(coord3d *from, coord3d *to, coord3d *dir, RoomV
 
                 if (bgTestRayIntersectsBbox(from, dir, (s32 *) (&bboxMin), (s32 *) (&bboxMax)))
                 {
-                    if (intersectRayTriangle((Vertex *)((s32)vtxbase - (0 - (idx[0] << 4))), (Vertex *)((s32)vtxbase - (0 - (idx[1] << 4))), (Vertex *)((s32)vtxbase - (0 - (idx[2] << 4))), (coord3d *) (((roomnum * 24) + ((s32) ptr_bgdata_room_fileposition_list)) + 12), from, to, dir, &hitbuf))
+                    if (intersectRayTriangle((Vertex *)((u8 *)vtxbase + (idx[0] << 4)), (Vertex *)((u8 *)vtxbase + (idx[1] << 4)), (Vertex *)((u8 *)vtxbase + (idx[2] << 4)), &ptr_bgdata_room_fileposition_list[roomnum].pos, from, to, dir, &hitbuf))
                     {
                         tcmd = gdl;
                         dx = ((s32) hitbuf.hitpos.x) - ((s32) from->x);
@@ -3766,7 +3785,7 @@ bool bgTestRayIntersectionInRoom(coord3d *from, coord3d *to, coord3d *dir, RoomV
 
                         if (bgTestRayIntersectsBbox(from, dir, (s32 *) (&bboxMin2), (s32 *) (&bboxMax2)))
                         {
-                            if (intersectRayTriangle((Vertex *)((s32)vtxbase - (0 - (idx2[0] << 4))), (Vertex *)((s32)vtxbase - (0 - (idx2[1] << 4))), (Vertex *)((s32)vtxbase - (0 - (idx2[2] << 4))), (coord3d *) (((roomnum * 24) + ((s32) ptr_bgdata_room_fileposition_list)) + 12), from, to, dir, &hitbuf))
+                            if (intersectRayTriangle((Vertex *)((u8 *)vtxbase + (idx2[0] << 4)), (Vertex *)((u8 *)vtxbase + (idx2[1] << 4)), (Vertex *)((u8 *)vtxbase + (idx2[2] << 4)), &ptr_bgdata_room_fileposition_list[roomnum].pos, from, to, dir, &hitbuf))
                             {
                                 tcmd = gdl;
                                 dx = ((s32) hitbuf.hitpos.x) - ((s32) from->x);
@@ -5249,7 +5268,7 @@ void bgRoomCalcBB(s32 room) // canonical name
     StanRoomBounds limits;
     u8 wasloaded;
 
-    roomdata = (bg_room_data *) ((s32) ptr_bgdata_room_fileposition_list + room * 24);
+    roomdata = &ptr_bgdata_room_fileposition_list[room];
 
     if (roomdata->pPointTableBin == NULL)
     {
@@ -5282,7 +5301,7 @@ void bgRoomCalcBB(s32 room) // canonical name
     }
 
     vertices = g_BgRoomInfo[room].vertices;
-    roomdata = (bg_room_data *) ((s32) ptr_bgdata_room_fileposition_list + room * 24);
+    roomdata = &ptr_bgdata_room_fileposition_list[room];
 
     limits.minX = 0x7fff;
     limits.minY = 0x7fff;
@@ -5291,7 +5310,7 @@ void bgRoomCalcBB(s32 room) // canonical name
     limits.maxY = -0x7fff;
     limits.maxZ = -0x7fff;
 
-    for (; vertices < (Vtx *) ((s32) g_BgRoomInfo[room].vertices + g_BgRoomInfo[room].usize_point_index_binary); vertices++)
+    for (; vertices < (Vtx *)((u8 *)g_BgRoomInfo[room].vertices + g_BgRoomInfo[room].usize_point_index_binary); vertices++)
     {
         for (j = 0; j < 3; j++)
         {
