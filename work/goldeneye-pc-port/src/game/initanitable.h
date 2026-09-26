@@ -37,6 +37,8 @@ extern struct animation_table_data* ptr_animation_table;
 #define GE_ANIMDATA_OFFSET(name) ((s32)&ANIM_DATA_##name)
 #define GE_ANIMDATA_BASE ((s32)&ptr_animation_table->data)
 #define GE_ANIMDATA_RUNTIME_ADDR(ptr) ((s32)(ptr))
+void expand_ani_table_entries(s32 *arg0);
+
 #endif
 #define GE_ANIMDATA_ADDR(name) (GE_ANIMDATA_BASE + GE_ANIMDATA_OFFSET(name))
 #define GE_ANIMDATA_PTR(name) ((void *)GE_ANIMDATA_ADDR(name))
@@ -45,6 +47,16 @@ extern struct animation_table_data* ptr_animation_table;
 #define GE_ANIMTABLE_ENTRY_PTR(table, index) ((void *)(uintptr_t)(u32)(table)[(index)])
 #else
 #define GE_ANIMTABLE_ENTRY_PTR(table, index) ((void *)(table)[(index)])
+#endif
+
+#ifdef PORT
+/* Static hit/death tables temporarily store a 32-bit animation offset in a
+ * pointer-typed field until initResolveAnimTable() rebases it. Make that
+ * token-in-pointer boundary explicit instead of relying on integer->pointer
+ * conversion. */
+#define GE_ANIM_OFFSET_PTR(name) ((void *)(uintptr_t)(u32)PTR_ANIM_##name)
+#else
+#define GE_ANIM_OFFSET_PTR(name) ((void *)PTR_ANIM_##name)
 #endif
 
 /**
