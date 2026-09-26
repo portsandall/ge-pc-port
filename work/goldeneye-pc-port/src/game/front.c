@@ -314,7 +314,11 @@ s32 is_emulating_spectrum = FALSE;
 s32 is_cheat_menu_available = FALSE;
 
 u8 * ptr_logo_and_walletbond_DL = NULL;
+#ifdef PORT
+u8 *ptr_menu_videobuffer = NULL;
+#else
 s32 ptr_menu_videobuffer = 0;
+#endif
 struct Model *logoinst = NULL;
 struct Model * walletinst[] = { NULL, NULL, NULL, NULL};
 
@@ -8059,7 +8063,16 @@ void init_menu18_displaycast(void)
 #else
     modelSetAnimPlaySpeed(cast_model, 0.5f, 0);
 #endif
+#ifdef PORT
+    modelSetAnimation(cast_model,
+        (ModelAnimation *)GE_ANIMTABLE_ENTRY_PTR(animation_table_ptrs1, intro_animation_table[randomly_selected_intro_animation].animID),
+        flip,
+        intro_animation_table[randomly_selected_intro_animation].startframeoffset,
+        intro_animation_table[randomly_selected_intro_animation].playback_speed,
+        0.0f);
+#else
     modelSetAnimation(cast_model, animation_table_ptrs1[intro_animation_table[randomly_selected_intro_animation].animID], flip, intro_animation_table[randomly_selected_intro_animation].startframeoffset, intro_animation_table[randomly_selected_intro_animation].playback_speed, 0.0f);
+#endif
 
     g_MenuTimer = 0;
     cast_camera_dist_start = ((((f32) ((u32) randomGetNext())) * (1.0f / U32_MAX)) * 80.0f) + 70.0f;
