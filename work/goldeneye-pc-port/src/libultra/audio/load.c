@@ -23,6 +23,11 @@
 #include "synthInternals.h"
 #include <os.h>
 #include <R4300.h>
+#ifdef PORT
+#define AUDIO_ADDR32(p) ((s32)(u32)(uintptr_t)(p))
+#else
+#define AUDIO_ADDR32(p) ((s32)(p))
+#endif
 #if defined(__x86_64__) || defined(__aarch64__)
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,7 +114,7 @@ Acmd *alAdpcmPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
          * Now fix up state info to reflect the loop start point
          */
         f->lastsam = f->loop.start &0xf;
-        f->memin = (s32) f->table->base + ADPCMFBYTES *
+        f->memin = AUDIO_ADDR32(f->table->base) + ADPCMFBYTES *
             ((s32) (f->loop.start>>LFSAMPLES) + 1);
         f->sample = f->loop.start;
 
@@ -171,7 +176,7 @@ Acmd *alAdpcmPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
      * overFlow is the number of bytes past the end
      * of the bitstream I try to generate
      */
-    overFlow = f->memin + nbytes - ((s32) f->table->base + f->table->len);
+    overFlow = f->memin + nbytes - (AUDIO_ADDR32(f->table->base) + f->table->len);
     if (overFlow < 0)
         overFlow = 0;
     nOver = (overFlow/ADPCMFBYTES)<<LFSAMPLES;
@@ -211,7 +216,7 @@ Acmd *alAdpcmPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
             reported++;
             geTracePrintf("audiotrace.log", "[PASTEND] filter=%p sample=%d totalSamples=%d memin=0x%08x base=0x%08x len=%d overFlow=%d nOver=%d\n",
                     (void *)f, (int)f->sample, (int)totalSamples, (unsigned)f->memin,
-                    (unsigned)(s32)f->table->base, (int)f->table->len,
+                    (unsigned)AUDIO_ADDR32(f->table->base), (int)f->table->len,
                     (int)overFlow, (int)nOver);
         }
     }
@@ -277,7 +282,7 @@ Acmd *alRaw16Pull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
          */
         *outp += dramAlign;
         
-        f->memin = (s32) f->table->base + (f->loop.start<<1);
+        f->memin = AUDIO_ADDR32(f->table->base) + (f->loop.start<<1);
         f->sample = f->loop.start;
         op = *outp;
         
@@ -338,7 +343,7 @@ Acmd *alRaw16Pull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
      */
 
     nbytes = outCount<<1;
-    overFlow = f->memin + nbytes - ((s32) f->table->base + f->table->len);
+    overFlow = f->memin + nbytes - (AUDIO_ADDR32(f->table->base) + f->table->len);
     if (overFlow < 0)
         overFlow = 0;
     if (overFlow > nbytes)
@@ -408,7 +413,7 @@ alLoadParam(void *filter, s32 paramID, void *param)
                         (a->table->type == AL_ADPCM_WAVE) ? (void *)a->table->waveInfo.adpcmWave.book : NULL);
             }
 #endif
-            a->memin = (s32) a->table->base;
+            a->memin = AUDIO_ADDR32(a->table->base);
             a->sample = 0;
             switch (a->table->type){
                 case (AL_ADPCM_WAVE):
@@ -464,7 +469,7 @@ alLoadParam(void *filter, s32 paramID, void *param)
 	    /* Get loop info according to table type. */
 	    if (a->table)
 	    {
-		a->memin  = (s32) a->table->base;
+		a->memin  = AUDIO_ADDR32(a->table->base);
 		if (a->table->type == AL_ADPCM_WAVE)
 		{
 		    if (a->table->waveInfo.adpcmWave.loop)
