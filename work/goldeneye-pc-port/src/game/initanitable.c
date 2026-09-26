@@ -31,8 +31,8 @@ struct animation_table_data * ptr_animation_table;
 //data
 struct bondstruct_unk_animation_related D_80029D60 = {
     NULL,
-    &animations_frame_buffer, // Two pointers. One always points to the start of the buffer, the other can be modified.
-    &animations_frame_buffer
+    animations_frame_buffer, // Two pointers. One always points to the start of the buffer, the other can be modified.
+    animations_frame_buffer
 };
 
 s32 animation_table_ptrs1[] = {
@@ -245,26 +245,33 @@ struct anim_entry
     s32 unk10;
 };
 
-void expand_ani_table_entries(s32** arg0)
+void expand_ani_table_entries(s32 *arg0)
 {
-    /* D33: iterate as s32 * (4 bytes/iter). As s32 ** the loop advanced 8
-     * bytes/iter on x86-64, rebasing only even-indexed entries. Identical
-     * semantics to the N64 original, where both types were 4 bytes wide. */
-    s32 *var_v0;
+    /*
+     * D33: the table remains a dense array of 32-bit runtime-address tokens.
+     * Keep host bases in uintptr_t and narrow only when storing into those
+     * N64-layout fields. All dereferences promote through uintptr_t.
+     */
+    s32 *var_v0 = arg0;
+    uintptr_t dataBase = (uintptr_t)&ptr_animation_table->data;
+    uintptr_t entriesBase = (uintptr_t)&_animation_entriesSegmentRomStart;
 
-    var_v0 = (s32 *)arg0;
     while (*var_v0 != 0) {
         if (*var_v0 != 1) {
-            *var_v0 = (s32)((s32)*var_v0 + (s32)(&ptr_animation_table->data));
-            ((struct anim_entry *)*var_v0)->unk08 += (s32)&ptr_animation_table->data;
-            ((struct anim_entry *)*var_v0)->unk10 += (s32)&ptr_animation_table->data;
+            uintptr_t recAddr = dataBase + (u32)*var_v0;
+            struct anim_entry *rec = (struct anim_entry *)recAddr;
+
+            *var_v0 = (s32)(u32)recAddr;
+            rec->unk08 += (u32)dataBase;
+            rec->unk10 += (u32)dataBase;
         }
         var_v0++;
     }
 
-    for (var_v0 = (s32 *)arg0; *var_v0 != 0; var_v0++) {
+    for (var_v0 = arg0; *var_v0 != 0; var_v0++) {
         if (*var_v0 != 1) {
-            *(s32 *)*var_v0 += (s32)&_animation_entriesSegmentRomStart;
+            s32 *entryPtr = (s32 *)(uintptr_t)(u32)*var_v0;
+            *entryPtr += (u32)entriesBase;
         }
     }
 }
@@ -276,7 +283,7 @@ void alloc_load_expand_ani_table(void)
     osCreateMesgQueue(&animMsgQ, animMesg, 8);
     initAnimationsBuffer(&D_80029D60, &animMsgQ, &dword_CODE_bss_80069458);
     
-    animsDataSegmentSize = (s32)&_animation_dataSegmentEnd - (s32)&_animation_dataSegmentStart;
+    animsDataSegmentSize = (s32)((uintptr_t)&_animation_dataSegmentEnd - (uintptr_t)&_animation_dataSegmentStart);
     
     ptr_animation_table = mempAllocBytesInBank(animsDataSegmentSize, MEMPOOL_PERMANENT);
 
@@ -285,6 +292,6 @@ void alloc_load_expand_ani_table(void)
      * big-endian; convert per field before expand reads/writes them as LE. */
     romdataFixupAnimationData((u8 *)ptr_animation_table, (u32)animsDataSegmentSize,
                               animation_table_ptrs1, animation_table_ptrs2);
-    expand_ani_table_entries((s32*)&animation_table_ptrs1);
-    expand_ani_table_entries((s32*)&animation_table_ptrs2);
+    expand_ani_table_entries(animation_table_ptrs1);
+    expand_ani_table_entries(animation_table_ptrs2);
 }
