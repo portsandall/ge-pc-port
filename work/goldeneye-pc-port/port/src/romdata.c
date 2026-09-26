@@ -261,23 +261,30 @@ static int romdataFinishCartMap(const char *tok, u8 *img,
         struct raw16Range done[RAW16_MAX_RANGES];
         int ndone = 0;
 
-        /* Each tbl segment runs to the end of the ROM; bound the swap range
-         * by that (the real segment is smaller, but base/len are validated
-         * against this anyway). */
-        romdataRaw16Walk((const u8 *)&_sfxctlSegmentRomStart,
-                         (u32)&_sfxtblSegmentRomStart -
-                             (u32)&_sfxctlSegmentRomStart,
-                         (u8 *)&_sfxtblSegmentRomStart,
-                         CART_BASE + romSize -
-                             (u32)&_sfxtblSegmentRomStart,
-                         done, &ndone);
-        romdataRaw16Walk((const u8 *)&_instrumentsctlSegmentRomStart,
-                         (u32)&_instrumentstblSegmentRomStart -
-                             (u32)&_instrumentsctlSegmentRomStart,
-                         (u8 *)&_instrumentstblSegmentRomStart,
-                         CART_BASE + romSize -
-                             (u32)&_instrumentstblSegmentRomStart,
-                         done, &ndone);
+        /* Each tbl segment runs to the end of the ROM. Keep the linker
+         * symbols host-width for arithmetic, then narrow only validated byte
+         * counts passed to the ROM-format walker. */
+        uintptr_t cartEnd = (uintptr_t)CART_BASE + romSize;
+        uintptr_t sfxCtl = (uintptr_t)&_sfxctlSegmentRomStart;
+        uintptr_t sfxTbl = (uintptr_t)&_sfxtblSegmentRomStart;
+        uintptr_t insCtl = (uintptr_t)&_instrumentsctlSegmentRomStart;
+        uintptr_t insTbl = (uintptr_t)&_instrumentstblSegmentRomStart;
+
+        if (sfxCtl <= sfxTbl && sfxTbl <= cartEnd) {
+            romdataRaw16Walk((const u8 *)sfxCtl, (u32)(sfxTbl - sfxCtl),
+                             (u8 *)sfxTbl, (u32)(cartEnd - sfxTbl),
+                             done, &ndone);
+        } else {
+            sysLogPrintf(LOG_ERROR, "romdataInit: invalid SFX bank/table span");
+        }
+
+        if (insCtl <= insTbl && insTbl <= cartEnd) {
+            romdataRaw16Walk((const u8 *)insCtl, (u32)(insTbl - insCtl),
+                             (u8 *)insTbl, (u32)(cartEnd - insTbl),
+                             done, &ndone);
+        } else {
+            sysLogPrintf(LOG_ERROR, "romdataInit: invalid instrument bank/table span");
+        }
         if (ndone)
             sysLogPrintf(LOG_INFO, "romdataInit: D230 byte-swapped %d RAW16 "
                      "wavetable range(s) in place", ndone);
@@ -488,7 +495,7 @@ static u32 romdataBswap32(u32 v)
 
 /* The port/shim <stddef.h> is the N64 stub for C TUs (no offsetof); this is
  * the equivalent null-cast idiom. */
-#define ROMDATA_OFFSEXP(T, M) ((u32)&(((T *)0)->M))
+#define ROMDATA_OFFSEXP(T, M) ((u32)(uintptr_t)&(((T *)0)->M))
 
 static u16 romdataBswap16(u16 v)
 {
