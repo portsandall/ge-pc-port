@@ -172,12 +172,18 @@ s32 initResolveAnimTable(struct StruckAnim *entries)
 {
     s32 count;
     struct StruckAnim *entry;
+#ifdef PORT
+    uintptr_t address;
+#else
     s32 address;
     struct StruckAnim *ptr_animation_table_addr;
+#endif
 
     count = 0;
     entry = entries;
+#ifndef PORT
     ptr_animation_table_addr = (struct StruckAnim *)(&ptr_animation_table);
+#endif
 
     if (1);
 
@@ -185,11 +191,17 @@ s32 initResolveAnimTable(struct StruckAnim *entries)
     {
         do
         {
-            address = (*entry).struck_anim;
+#ifdef PORT
+            address = (uintptr_t)entry->struck_anim;
+#else
+            address = (s32)entry->struck_anim;
             entries = ptr_animation_table_addr;
+#endif
             count++;
             entry++;
+#ifndef PORT
             ptr_animation_table_addr = (struct StruckAnim *)(&ptr_animation_table);
+#endif
 #ifdef PORT
             entry[-1].struck_anim = (ModelAnimation *)((u8 *)ptr_animation_table + (u32)address);
 #else
