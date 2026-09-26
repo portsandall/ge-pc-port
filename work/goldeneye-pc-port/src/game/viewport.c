@@ -46,7 +46,12 @@ void zbufAllocate(void)
         }
     }
 
+#ifdef PORT
+    /* MEMPOOL_STAGE is deliberately mapped in the s32-safe V1 window. */
+    z_buffer = (s32)(uintptr_t)mempAllocBytesInBank((z_buffer_width * z_buffer_height * 2) + 64, MEMPOOL_STAGE);
+#else
     z_buffer = mempAllocBytesInBank((z_buffer_width * z_buffer_height * 2) + 64, MEMPOOL_STAGE);
+#endif
     z_buffer = ALIGN64_V1(z_buffer);
 }
 

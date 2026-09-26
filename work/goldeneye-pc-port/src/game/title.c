@@ -310,7 +310,7 @@ Gfx *sub_GAME_7F007F30(Gfx *gdl, s32 count, Mtxf *matrix)
         Mtxf sp88;
 
         matrix_4x4_copy((Mtxf *) &((s8 *) chrModelInstance->render_pos)[i * sizeof(Mtxf)], &sp88);
-        matrix_4x4_f32_to_s32(&sp88, &((Mtxf *) chrModelInstance->render_pos)[i]);
+        matrix_4x4_f32_to_s32(sp88.m, (s32 (*)[4])((Mtxf *)chrModelInstance->render_pos)[i].m);
     }
 
     for (i = 0; i < gunModelInstance->obj->numMatrices; i++)
@@ -318,7 +318,7 @@ Gfx *sub_GAME_7F007F30(Gfx *gdl, s32 count, Mtxf *matrix)
         Mtxf sp48;
 
         matrix_4x4_copy((Mtxf *) &((s8 *) gunModelInstance->render_pos)[i * sizeof(Mtxf)], &sp48);
-        matrix_4x4_f32_to_s32(&sp48, &((Mtxf *) gunModelInstance->render_pos)[i]);
+        matrix_4x4_f32_to_s32(sp48.m, (s32 (*)[4])((Mtxf *)gunModelInstance->render_pos)[i].m);
     }
 
     return renderData.gdl;
@@ -410,7 +410,7 @@ void setupRarewareLogoData(s32 address, s32 size) {
     virtualaddress = address;
 #ifdef PORT
     romCopy((void *)(uintptr_t)(u32)virtualaddress, &_rarewarelogoSegmentRomStart,
-            ALIGN64_V2((u32)&_rarewarelogoSegmentEnd - (u32)&_rarewarelogoSegmentStart));
+            ALIGN64_V2((u32)((uintptr_t)&_rarewarelogoSegmentEnd - (uintptr_t)&_rarewarelogoSegmentStart)));
 #else
     romCopy(virtualaddress, &_rarewarelogoSegmentRomStart, ALIGN64_V2((u32)&_rarewarelogoSegmentEnd - (u32)&_rarewarelogoSegmentStart));
 #endif
@@ -481,7 +481,12 @@ void sub_GAME_7F008DE4(u8 **addr, s32 *size) {
     *size -= 0x40400;
     *addr += 0x40400;
     dword_CODE_bss_80069588 = *addr;
+#ifdef PORT
+    romCopy(dword_CODE_bss_80069588, &unknown2,
+            ALIGN64_V2((u32)((uintptr_t)&unknown2_end - (uintptr_t)&unknown2)));
+#else
     romCopy(dword_CODE_bss_80069588, (void *)(s32)&unknown2, ALIGN64_V2(((u32)&unknown2_end - (u32)&unknown2)));
+#endif
     rle_expand_8bit(dword_CODE_bss_80069588, dword_CODE_bss_8006958C);
 }
 
