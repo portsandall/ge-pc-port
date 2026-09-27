@@ -22,11 +22,16 @@ jobs:
       - name: Install AArch64 cross dependencies
         run: |
           sudo dpkg --add-architecture arm64
-          sudo sed -i 's/^deb http/deb [arch=amd64] http/' /etc/apt/sources.list
-          sudo tee /etc/apt/sources.list.d/arm64.list >/dev/null <<'APT'
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy main universe
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main universe
-          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main universe
+          sudo rm -f /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/*.list
+          sudo tee /etc/apt/sources.list >/dev/null <<'APT'
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy main universe restricted multiverse
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-updates main universe restricted multiverse
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-backports main universe restricted multiverse
+          deb [arch=amd64] http://security.ubuntu.com/ubuntu jammy-security main universe restricted multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy main universe restricted multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main universe restricted multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-backports main universe restricted multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main universe restricted multiverse
           APT
           sudo apt-get update
           sudo apt-get install -y \
