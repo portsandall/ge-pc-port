@@ -27,7 +27,26 @@ REPORT="$GAMEDIR/reports/$STAMP"
 mkdir -p "$REPORT"
 cd "$GAMEDIR" || exit 1
 
-exec > >(tee "$REPORT/full.log") 2>&1
+# Show the live probe log on the same virtual console PortMaster uses.
+# This deliberately avoids SDL/EGL so display feedback does not depend on
+# the graphics stack we are trying to diagnose.
+PROBE_TTY="${CUR_TTY:-/dev/tty0}"
+export TERM=linux
+if [ -c "$PROBE_TTY" ]; then
+  if [ -n "${ESUDO:-}" ]; then
+    $ESUDO chmod 666 "$PROBE_TTY" >/dev/null 2>&1 || true
+  else
+    chmod 666 "$PROBE_TTY" >/dev/null 2>&1 || true
+  fi
+fi
+
+if [ -w "$PROBE_TTY" ]; then
+  printf '\033c\033[2J\033[H' > "$PROBE_TTY" 2>/dev/null || true
+  printf 'R36S HARDWARE PROBE\n-------------------\nStarting...\n\n' > "$PROBE_TTY" 2>/dev/null || true
+  exec > >(tee "$REPORT/full.log" "$PROBE_TTY") 2>&1
+else
+  exec > >(tee "$REPORT/full.log") 2>&1
+fi
 
 echo "=== R36S Hardware Qualification Probe ==="
 echo "timestamp=$STAMP"
@@ -234,6 +253,8 @@ fi
 
 echo
 echo "Probe complete: $REPORT"
+echo "Returning to EmulationStation..."
+sleep 2
 type pm_message >/dev/null 2>&1 && pm_message "R36S hardware probe complete. Report saved under r36sprobe/reports/$STAMP"
 type pm_finish >/dev/null 2>&1 && pm_finish
 exit 0
