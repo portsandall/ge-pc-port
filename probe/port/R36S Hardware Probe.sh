@@ -101,6 +101,45 @@ ls -la /dev/dri 2>&1 | tee "$REPORT/dev-dri.txt"
   done
 } | tee "$REPORT/drm-sysfs.txt"
 
+section "GPU_KERNEL_DEVICE"
+{
+  echo "[device nodes]"
+  ls -la /dev/mali* /dev/dri/* 2>&1 || true
+  echo "[platform drivers]"
+  for d in /sys/bus/platform/drivers/*mali* /sys/bus/platform/drivers/*gpu* /sys/bus/platform/drivers/panfrost*; do
+    [ -e "$d" ] || continue
+    echo "$d"
+    ls -la "$d" 2>/dev/null || true
+  done
+  echo "[GPU device tree]"
+  for d in /sys/firmware/devicetree/base/*gpu* /sys/firmware/devicetree/base/gpu@*; do
+    [ -d "$d" ] || continue
+    echo "--- $d ---"
+    for f in compatible status clock-names operating-points-v2; do
+      if [ -r "$d/$f" ]; then
+        printf '%s=' "$f"
+        tr '\\000' ' ' < "$d/$f" 2>/dev/null || true
+        echo
+      fi
+    done
+  done
+} | tee "$REPORT/gpu-kernel-device.txt"
+
+section "ACTIVE_NATIVE_PROBE"
+chmod +x "$BINARY" 2>/dev/null || true
+if [ -x "$BINARY" ]; then
+  {
+    echo "[binary]"
+    file "$BINARY" 2>/dev/null || true
+    echo "[runtime dependencies]"
+    ldd "$BINARY" 2>&1 || true
+  } | tee "$REPORT/native-binary-runtime.txt"
+  "$BINARY" 2>&1 | tee "$REPORT/active-probe.txt"
+  echo "active_probe_rc=${PIPESTATUS[0]}"
+else
+  echo "MISSING $BINARY" | tee "$REPORT/active-probe.txt"
+fi
+
 section "GPU_DEVFREQ_THERMAL"
 {
   for d in /sys/class/devfreq/* /sys/devices/platform/*gpu*/devfreq/*; do
@@ -118,21 +157,27 @@ section "GPU_DEVFREQ_THERMAL"
   done
 } | tee "$REPORT/devfreq-thermal.txt"
 
-section "MESA_DRIVER_FILES"
+section "GRAPHICS_USERSPACE"
 {
-  find /usr/lib /lib -maxdepth 4 -type f \( -name '*panfrost*' -o -name '*panvk*' -o -name '*Mali*' -o -name 'libEGL.so*' -o -name 'libGLESv2.so*' -o -name 'libGL.so*' -o -name 'libgbm.so*' -o -name 'libdrm.so*' -o -name '*_dri.so' -o -name '*_icd*.json' \) 2>/dev/null | sort
+  echo "[ldconfig]"
+  command -v ldconfig >/dev/null 2>&1 && ldconfig -p 2>/dev/null | grep -Ei 'lib(mali|EGL|GLES|GLX|OpenGL|gbm|drm|vulkan)' || true
+  echo "[known graphics directories]"
+  for d in /usr/lib/aarch64-linux-gnu/dri /usr/lib/dri /usr/lib/aarch64-linux-gnu /lib/aarch64-linux-gnu /usr/share/vulkan/icd.d /etc/vulkan/icd.d; do
+    [ -d "$d" ] || continue
+    echo "--- $d ---"
+    ls -la "$d" 2>/dev/null | grep -Ei 'mali|pan|dri|EGL|GLES|GL\.so|gbm|drm|vulkan|icd' || true
+  done
+  echo "[specific files]"
+  for p in \
+    /usr/lib*/libMali.so* /usr/lib*/libmali.so* /lib*/libMali.so* /lib*/libmali.so* \
+    /usr/lib/*/libMali.so* /usr/lib/*/libmali.so* /lib/*/libMali.so* /lib/*/libmali.so* \
+    /usr/lib/*/dri/panfrost_dri.so /usr/lib/*/dri/*pan*_dri.so; do
+    [ -e "$p" ] && ls -l "$p"
+  done
 } | tee "$REPORT/graphics-libraries.txt"
+
 if command -v dpkg-query >/dev/null 2>&1; then
   dpkg-query -W 2>/dev/null | grep -Ei 'mesa|libdrm|vulkan|panfrost|mali|linux-image' | tee "$REPORT/packages-gpu.txt" || true
-fi
-
-section "ACTIVE_NATIVE_PROBE"
-chmod +x "$BINARY" 2>/dev/null || true
-if [ -x "$BINARY" ]; then
-  "$BINARY" 2>&1 | tee "$REPORT/active-probe.txt"
-  echo "active_probe_rc=${PIPESTATUS[0]}"
-else
-  echo "MISSING $BINARY" | tee "$REPORT/active-probe.txt"
 fi
 
 section "OPTIONAL_SYSTEM_TOOLS"
