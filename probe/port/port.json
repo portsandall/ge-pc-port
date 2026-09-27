@@ -1,0 +1,27 @@
+{
+  "version": 4,
+  "name": "r36s-hardware-probe.zip",
+  "items": [
+    "R36S Hardware Probe.sh",
+    "r36sprobe/"
+  ],
+  "items_opt": [],
+  "attr": {
+    "title": "R36S Hardware Probe",
+    "porter": ["bitflipunix-re"],
+    "desc": "Deep read-only R36S hardware and graphics-driver qualification suite. Inventories RK3326/Mali/DRM/kernel data and actively tests DRM, GBM, DMA-BUF, EGL, OpenGL ES, desktop OpenGL and Vulkan device creation.",
+    "desc_md": null,
+    "inst": "Install with PortMaster and launch from Ports. Results are written to r36sprobe/reports/<timestamp>/.",
+    "inst_md": null,
+    "genres": ["utility"],
+    "image": null,
+    "rtr": false,
+    "exp": true,
+    "runtime": [],
+    "store": [],
+    "availability": "full",
+    "reqs": [],
+    "arch": ["aarch64"],
+    "min_glibc": ""
+  }
+}
