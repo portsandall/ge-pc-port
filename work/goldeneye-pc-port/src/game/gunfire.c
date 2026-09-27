@@ -2347,8 +2347,13 @@ Gfx* watchRenderController(Gfx* gdl, Mtxf* basemtx, s32 envcolour, bool animateb
 
         for (i = 0; i < objheader->numMatrices; i++)
         {
+#ifdef PORT
+            matrix_4x4_copy(&modelstack.render_pos[i].pos, &sp41c);
+            matrix_4x4_f32_to_s32(sp41c.m, modelstack.render_pos[i].view);
+#else
             matrix_4x4_copy((u32)modelstack.render_pos + i * sizeof(Mtxf), &sp41c);
             matrix_4x4_f32_to_s32(&sp41c, &modelstack.render_pos[i]);
+#endif
         }
 
         matrix_4x4_7F058C88();

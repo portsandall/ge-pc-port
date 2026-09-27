@@ -1191,8 +1191,14 @@ void                   ai(PropDefHeaderRecord *Entityp, PROP_TYPE EntityType)
                     else if (AircraftEntityp)
                     {
                         zero = 0; // debug value maybe?
-                        /* D32/D33: table holds s32 offsets; cast at use site. */
+                        /* D32/D33: entries are 32-bit runtime-address tokens. */
+#ifdef PORT
+                        modelSetAnimation(AircraftEntityp->model,
+                            (ModelAnimation *)GE_ANIMTABLE_ENTRY_PTR(animation_table_ptrs2, anim_id),
+                            zero, startframe, 0.5f, (s32)ai->INTERPOL_TIME60);
+#else
                         modelSetAnimation(AircraftEntityp->model, (ModelAnimation *)animation_table_ptrs2[anim_id], zero, startframe, 0.5f, (s32)ai->INTERPOL_TIME60);
+#endif
                         if (endframe >= 0)
                         {
                             modelSetAnimEndFrame(AircraftEntityp->model, endframe);
@@ -3718,7 +3724,7 @@ void                   ai(PropDefHeaderRecord *Entityp, PROP_TYPE EntityType)
                     bool                  ok       = FALSE;
                     if (ChrEntityp && ChrEntityp->prop && ChrEntityp->model)
                     {
-                        ok = hatCreateForChr(ChrEntityp, modelnum, flags);
+                        ok = hatCreateForChr(ChrEntityp, modelnum, flags) != NULL;
                     }
                     if (ok)
                     {

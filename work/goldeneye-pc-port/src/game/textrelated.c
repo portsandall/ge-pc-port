@@ -116,8 +116,8 @@ void load_font_tables(void)
     text_s = 0;
     text_t = 0;
 
-    len = (romptr_t)&_fontbankgothicSegmentEnd - (romptr_t)&_fontbankgothicSegmentStart;
 #ifdef PORT
+    len = (u32)((uintptr_t)&_fontbankgothicSegmentEnd - (uintptr_t)&_fontbankgothicSegmentStart);
 	{
         u32 n64len = len;
 		ptrFontBankGothic = (struct font *)mempAllocBytesInBank(romdataFontPcSize((const u8 *)&_fontbankgothicSegmentRomStart, n64len), MEMPOOL_STAGE);
@@ -139,8 +139,8 @@ void load_font_tables(void)
 		ptrFontBankGothicChars[i].pixeldata += (uintptr_t)ptrFontBankGothic;
 	}
 
-    len = (romptr_t)&_fontzurichboldSegmentEnd - (romptr_t)&_fontzurichboldSegmentStart;
 #ifdef PORT
+    len = (u32)((uintptr_t)&_fontzurichboldSegmentEnd - (uintptr_t)&_fontzurichboldSegmentStart);
 	{
         u32 n64len = len;
 		ptrFontZurichBold = (struct font *)mempAllocBytesInBank(romdataFontPcSize((const u8 *)&_fontzurichboldSegmentRomStart, n64len), MEMPOOL_STAGE);

@@ -4574,7 +4574,12 @@ void modelRenderNodeGundl(ModelRenderData* renderdata, ModelNode* arg1)
     {
         if ((renderdata->flags & 1) && rodata->Primary)
         {
-            gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical(rodata->BaseAddr));
+    #ifdef PORT
+        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1,
+                   osVirtualToPhysical((void *)(uintptr_t)rodata->BaseAddr));
+#else
+        gSPSegment(renderdata->gdl++, SPSEGMENT_MODEL_COL1, osVirtualToPhysical(rodata->BaseAddr));
+#endif
 
             if (renderdata->cullmode)
             {
@@ -6181,7 +6186,11 @@ s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
     else if (D_80036414 != NULL) // should never be NULL after initAnimationsBuffer is called
     {
         // Get dest from this D_80036414 which points to an array. Align to 16 bytes.
+#ifdef PORT
+        dest = (u32)ALIGN16_a((uintptr_t)D_80036414->animBufferPtr2);
+#else
         dest = ((u32) (D_80036414->animBufferPtr2 + 15) >> 4) * 16;
+#endif
         ret = dest;
 
         // Get source of this animation in ROM with the offset of the frame we'll load
@@ -6204,7 +6213,11 @@ s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
 
         // Set this to point to the end of the copied frame
         // This allows to copy another frame after this one
+#ifdef PORT
+        D_80036414->animBufferPtr2 = (char *)(uintptr_t)(u32)(dest + size);
+#else
         D_80036414->animBufferPtr2 = dest + size;
+#endif
     }
     return ret;
 }
@@ -6285,7 +6298,11 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
                 {
                     ModelRoData_DisplayListRecord* rodata = &node->Data->DisplayList;
                     PROMOTE(rodata->Vertices);
+#ifdef PORT
+                    rodata->BaseAddr = (u32)fileramaddr;
+#else
                     rodata->BaseAddr = (void *)fileramaddr;
+#endif
                     break;
                 }
 
@@ -6390,7 +6407,7 @@ void modelPromoteNodeOffsetsToPointers(ModelNode *node, u32 vma, u32 fileramaddr
             case MODELNODE_OPCODE_OP11:
                 {
                     ModelRoData_Op11Record* rodata = &node->Data->Op11;
-                    PROMOTE(rodata->unk0c[15]);
+                    PROMOTE32(rodata->unk0c[15]);
                     rodata->BaseAddr = (void *)fileramaddr;
                     break;
                 }

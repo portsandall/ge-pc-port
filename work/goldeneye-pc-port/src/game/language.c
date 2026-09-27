@@ -360,7 +360,12 @@ struct jpncharpixels *langGetJpnCharPixels(s32 codepoint)
 		g_JpnCacheCacheItems[freeindexsingle].ttl = 2;
 		g_JpnCacheCacheItems[freeindexsingle].codepoint = codepoint >> 1;
 
+#ifdef PORT
+		romCopy(&g_JpnCharCachePixels[freeindexsingle * 8],
+		        (u8 *)&_jfontchardataSegmentRomStart + (codepoint >> SHIFTAMOUNT) * 0x60, 0x60);
+#else
 		romCopy(&g_JpnCharCachePixels[freeindexsingle * 8], (romptr_t) &_jfontchardataSegmentRomStart + (codepoint >> SHIFTAMOUNT) * 0x60, 0x60);
+#endif
 
 		return &g_JpnCharCachePixels[freeindexsingle * 8];
 	}
@@ -371,7 +376,12 @@ struct jpncharpixels *langGetJpnCharPixels(s32 codepoint)
 		g_JpnCacheCacheItems[freeindexmulti + 0].codepoint = codepoint >> 1;
 		g_JpnCacheCacheItems[freeindexmulti + 1].codepoint = codepoint >> 1;
 
+#ifdef PORT
+		romCopy(&g_JpnCharCachePixels[freeindexmulti * 8],
+		        (u8 *)&_efontchardataSegmentRomStart + ((codepoint & 0x1fff) >> SHIFTAMOUNT) * 0x80, 0x80);
+#else
 		romCopy(&g_JpnCharCachePixels[freeindexmulti * 8], (romptr_t) &_efontchardataSegmentRomStart + ((codepoint & 0x1fff) >> SHIFTAMOUNT) * 0x80, 0x80);
+#endif
 
 		return &g_JpnCharCachePixels[freeindexmulti * 8];
 	}
