@@ -473,14 +473,60 @@ static void probe_gpu(void)
     kv("drm.node", node);
     status("drm.render_open", 1);
 
+    int gpu_drm = 0;
     drmVersionPtr ver = drmGetVersion(fd);
     if (ver) {
         printf("drm.driver=%.*s\n", ver->name_len, ver->name);
         printf("drm.version=%d.%d.%d\n",
                ver->version_major, ver->version_minor, ver->version_patchlevel);
+        gpu_drm =
+            (ver->name && (
+                contains_ci(ver->name, "panfrost") ||
+                contains_ci(ver->name, "panthor") ||
+                contains_ci(ver->name, "lima")));
+        printf("drm.gpu_render_driver=%s\n", gpu_drm ? "yes" : "no");
         drmFreeVersion(ver);
     }
 
+    if (!gpu_drm) {
+        puts("gbm.path=SKIP_DISPLAY_DRM_NOT_GPU");
+        puts("gpu.vendor_mali_node_check=/dev/mali0");
+        if (access("/dev/mali0", R_OK | W_OK) == 0)
+            puts("gpu.vendor_mali_node=PASS");
+        else if (access("/dev/mali0", F_OK) == 0)
+            puts("gpu.vendor_mali_node=PRESENT_NO_RW");
+        else
+            puts("gpu.vendor_mali_node=ABSENT");
+
+        /*
+         * Legacy/vendor Mali stacks are not represented by a Panfrost DRM
+         * render node. Probe EGL_DEFAULT_DISPLAY separately instead of
+         * passing the Rockchip display controller to GBM.
+         */
+        puts("egl.vendor_path=TRY_DEFAULT_DISPLAY");
+        EGLDisplay vdpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+        if (vdpy == EGL_NO_DISPLAY) {
+            printf("egl.vendor_default_display=FAIL:0x%04x\n", eglGetError());
+        } else {
+            EGLint vmaj = 0, vmin = 0;
+            if (!eglInitialize(vdpy, &vmaj, &vmin)) {
+                printf("egl.vendor_initialize=FAIL:0x%04x\n", eglGetError());
+            } else {
+                printf("egl.vendor_version=%d.%d\n", vmaj, vmin);
+                kv("egl.vendor_name", eglQueryString(vdpy, EGL_VENDOR));
+                kv("egl.vendor_client_apis", eglQueryString(vdpy, EGL_CLIENT_APIS));
+                kv("egl.vendor_extensions", eglQueryString(vdpy, EGL_EXTENSIONS));
+                run_gl_context(vdpy, "vendor_gles2", EGL_OPENGL_ES_API, 2);
+                run_gl_context(vdpy, "vendor_gles3", EGL_OPENGL_ES_API, 3);
+                run_gl_context(vdpy, "vendor_opengl", EGL_OPENGL_API, 0);
+                eglTerminate(vdpy);
+            }
+        }
+        close(fd);
+        return;
+    }
+
+    puts("gbm.path=TRY_GPU_DRM");
     struct gbm_device *gbm = gbm_create_device(fd);
     if (!gbm) {
         status("gbm.device", 0);
@@ -705,10 +751,16 @@ static void probe_vulkan(void)
 
 int main(void)
 {
-    puts("probe.version=2");
+    setvbuf(stdout, NULL, _IOLBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
+    puts("probe.version=3");
+    puts("probe.stage=system");
     probe_system();
+    puts("probe.stage=kms");
     probe_kms();
+    puts("probe.stage=gpu");
     probe_gpu();
+    puts("probe.stage=vulkan");
     probe_vulkan();
     printf("probe.failures=%d\n", g_failures);
     printf("probe.result=%s\n",
