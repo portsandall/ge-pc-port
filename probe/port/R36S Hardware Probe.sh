@@ -58,6 +58,29 @@ echo "portmaster.param_device=${param_device:-unknown}"
 echo
 
 section() { echo; echo "===== $* ====="; }
+
+run_timed() {
+  secs="$1"; shift
+  if command -v timeout >/dev/null 2>&1; then
+    timeout -k 2 "$secs" "$@"
+    return $?
+  fi
+  "$@" &
+  pid=$!
+  (
+    sleep "$secs"
+    kill -TERM "$pid" 2>/dev/null || true
+    sleep 2
+    kill -KILL "$pid" 2>/dev/null || true
+  ) &
+  watchdog=$!
+  wait "$pid"
+  rc=$?
+  kill "$watchdog" 2>/dev/null || true
+  wait "$watchdog" 2>/dev/null || true
+  return "$rc"
+}
+
 copy_readable() {
   src="$1"; dst="$2"
   [ -r "$src" ] && cat "$src" > "$REPORT/$dst" 2>/dev/null || true
@@ -153,8 +176,13 @@ if [ -x "$BINARY" ]; then
     echo "[runtime dependencies]"
     ldd "$BINARY" 2>&1 || true
   } | tee "$REPORT/native-binary-runtime.txt"
-  "$BINARY" 2>&1 | tee "$REPORT/active-probe.txt"
-  echo "active_probe_rc=${PIPESTATUS[0]}"
+  echo "Native probe timeout: 20 seconds"
+  run_timed 20 "$BINARY" 2>&1 | tee "$REPORT/active-probe.txt"
+  active_rc=${PIPESTATUS[0]}
+  echo "active_probe_rc=$active_rc"
+  if [ "$active_rc" -eq 124 ] || [ "$active_rc" -eq 137 ] || [ "$active_rc" -eq 143 ]; then
+    echo "ACTIVE_NATIVE_PROBE: TIMEOUT - continuing with remaining checks"
+  fi
 else
   echo "MISSING $BINARY" | tee "$REPORT/active-probe.txt"
 fi
@@ -200,10 +228,10 @@ if command -v dpkg-query >/dev/null 2>&1; then
 fi
 
 section "OPTIONAL_SYSTEM_TOOLS"
-command -v modetest >/dev/null 2>&1 && modetest -c -p -f 2>&1 | tee "$REPORT/modetest.txt" || true
-command -v eglinfo >/dev/null 2>&1 && eglinfo -B 2>&1 | tee "$REPORT/eglinfo.txt" || true
-command -v glxinfo >/dev/null 2>&1 && glxinfo -B 2>&1 | tee "$REPORT/glxinfo.txt" || true
-command -v vulkaninfo >/dev/null 2>&1 && vulkaninfo --summary 2>&1 | tee "$REPORT/vulkaninfo.txt" || true
+command -v modetest >/dev/null 2>&1 && run_timed 8 modetest -c -p -f 2>&1 | tee "$REPORT/modetest.txt" || true
+command -v eglinfo >/dev/null 2>&1 && run_timed 8 eglinfo -B 2>&1 | tee "$REPORT/eglinfo.txt" || true
+command -v glxinfo >/dev/null 2>&1 && run_timed 8 glxinfo -B 2>&1 | tee "$REPORT/glxinfo.txt" || true
+command -v vulkaninfo >/dev/null 2>&1 && run_timed 10 vulkaninfo --summary 2>&1 | tee "$REPORT/vulkaninfo.txt" || true
 
 section "KERNEL_GPU_LOG"
 if command -v dmesg >/dev/null 2>&1; then
