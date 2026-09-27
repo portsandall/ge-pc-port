@@ -1,203 +1,465 @@
-# ARM-GE — GoldenEye 007, Native on ARM64 Linux
+# ARM-GE
 
-> **GoldenEye 007's reconstructed Nintendo 64 codebase running natively on ARM64 Linux handheld hardware — AArch64 + SDL2 + OpenGL ES, not N64 emulation.**
+<div align="center">
 
-ARM-GE is an open-source engineering effort to make the reconstructed GoldenEye 007 Nintendo 64 codebase run as native software on low-power ARM64 Linux handhelds.
+## GoldenEye 007 — Native ARM64 Linux Port
 
-The current reference target is **R36S / dArkOSRE / PortMaster** using **AArch64 + SDL2 + OpenGL ES 3**.
+**GoldenEye 007's reconstructed Nintendo 64 codebase running natively on ARM64 Linux handheld hardware.**
 
-## Download the current beta
+**AArch64 · SDL2 · OpenGL ES · PortMaster · R36S**
 
-**Most R36S / PortMaster users should download:**
+[![Beta](https://img.shields.io/badge/status-beta-orange)](https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26)
+[![Target](https://img.shields.io/badge/target-R36S%20%2F%20ARM64-blue)](https://github.com/bitflipunix-re/ge-pc-port)
+[![Graphics](https://img.shields.io/badge/graphics-OpenGL%20ES-5c6bc0)](https://github.com/bitflipunix-re/ge-pc-port)
+[![PortMaster](https://img.shields.io/badge/launcher-PortMaster-success)](https://github.com/bitflipunix-re/ge-pc-port/releases/latest)
 
-[**Download `ge007-r36s-portmaster-beta.zip`**](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007-r36s-portmaster-beta.zip)
+**[Download the latest beta](https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26)** ·
+**[PortMaster installer](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007-r36s-portmaster-beta.zip)** ·
+**[Standalone AArch64 binary](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.aarch64)**
 
-Other useful release links:
-
-- [Standalone AArch64 executable — `ge007.aarch64`](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.aarch64)
-- [Current beta release page, checksums and notes](https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26)
-- [Jump to R36S / PortMaster installation instructions](#install-on-r36s--darkosre--portmaster)
-- [Jump to source-build instructions](#build-from-source)
-
-No GoldenEye ROM or generated ROM-derived assets are included. You must provide your own legally obtained GoldenEye 007 NTSC-U big-endian ROM.
-
-## Current release
-
-ARM-GE has now moved from **alpha** to **beta** for the R36S / PortMaster target.
-
-The first player-focused beta prerelease was published on **26 September 2026** from the validated main branch:
-
-- Release publication revision: `88e15245756e82074bf63b9312e7197122b1cd03`
-- Build run: `36271139262`
-- Release tag: `r36s-beta-2026-09-26`
-- Release: [r36s-beta-2026-09-26](https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26)
-- Standalone executable: `ge007.aarch64` — 1,798,512 bytes
-- Executable asset SHA-256: `0ae0578d9260c9d3ff4930fb933a96dad53692e5b9b417a5bd51e3c31f07a458`
-- PortMaster installer: `ge007-r36s-portmaster-beta.zip` — 1,102,377 bytes
-- Installer asset SHA-256: `e12d8fb37deb670f4f47629393657be60f65ba30b7fe54cb976adfa6b8ee546b`
-- Compatibility installer filename: `ge007.zip`
-- Architecture: AArch64
-- Graphics: SDL2 + OpenGL ES
-- Target: R36S / dArkOSRE / PortMaster
-- ROM target: GoldenEye 007 NTSC-U, big-endian
-
-This beta is intentionally different from the development builds used during the ARM64 bring-up. It is built in **Release** mode and stripped, with development-only benchmarking, render probes, frame-dump capture paths and the standalone DAM-lab HUD excluded from the player binary/package.
-
-The beta keeps the features needed for normal use: the ARM-GE Glass Control Deck, normal runtime error logging, production crash screen, controller support, clean Start+Select exit, ROM verification, first-run sidecar generation and the lightweight CPU/FPS/RAM telemetry backend used by Port Control.
-
-The release workflow verifies the AArch64 executable and installer, checks that the player package contains no benchmark launcher or development probe markers, refuses to publish ROM images or generated ROM-derived sidecars, and publishes both the standalone `.aarch64` executable and an explicitly named PortMaster installer package (while retaining `ge007.zip` for compatibility).
-
-## Repository map
-
-The repository is intentionally split between the reconstructed game source, the handheld integration layer and release tooling:
-
-- `work/goldeneye-pc-port/` — GoldenEye game/engine source and ARM64/GLES port work.
-- `port/` — PortMaster launcher and runtime integration files.
-- `bundle/` — files bundled into the distributable package.
-- `package.py` — builds the PortMaster installer ZIP around a compiled `ge007.aarch64`.
-- `build-arm.sh` — local ARM64 build helper.
-- `.github/workflows/build-r36s.yml` — canonical R36S AArch64 build, validation and beta-release workflow.
-- `docs/` — deeper technical and development documentation.
-- `watch/` — development support/watch tooling; it is not the player-facing entry point.
-
-If you only want to play the port, you do **not** need to understand the source tree: download the PortMaster beta above, provide the required ROM, and follow the install section.
-
-## September 26 completion pass
-
-The current mainline includes the verified ARM64 work from the active development branches:
-
-- host-width stage/setup rebasing for campaign and multiplayer data;
-- animation/model/title/language/background pointer-width fixes;
-- cached animation pointer zero-extension and host-width comparison fixes;
-- character-action pointer truth/width fixes;
-- player-body teardown hardening for stale or missing props;
-- fresh-save NULL-pointer safety;
-- stage-boundary SFX cleanup for long-session audio stability;
-- displacement-stable absolute/direct mouse look;
-- batched-tick crosshair damping stabilization;
-- scripted/death/pause camera ownership protection;
-- watch-menu toggle and slider persistence;
-- CPU/FPS/RAM diagnostics retained while the intrusive HUD defaults off;
-- mission-save/title-handoff/stage-unload breadcrumbs for remaining transition failures;
-- an ARM64 semantic regression gate that runs before every reference build.
-
-Older Dam, PortMaster integration and Tom experiment branches are behind the consolidated game-port mainline. The `r36s-cfw` branch is a separate firmware project and is intentionally not merged into the GoldenEye game port.
-
-## Current showcase
-
-[![Watch the current ARM64/R36S showcase](https://img.youtube.com/vi/lcN9C9waB6I/hqdefault.jpg)](https://www.youtube.com/shorts/lcN9C9waB6I)
-
-Latest public video: https://www.youtube.com/shorts/lcN9C9waB6I
-
-[Full showcase notes →](SHOWCASE.md)
-
-## ARM-GE Glass Control Deck
-
-The F10 overlay is a first-class port feature rather than a debug-only menu. Its layout is generated from the live GoldenEye VI coordinate space, so the same interface scales across the R36S target and larger desktop/handheld resolutions without fixed-resolution artwork.
-
-Open it with **F10**. On a controller, use the D-pad/left stick to navigate, **LB/RB** to change pages, **A/X** to advance a value, **B/Y** to step backward, and **Start** to close. Mouse interaction is mapped through Fast3D's actual cropped UI viewport, so click targets remain aligned when gameplay safe-area or viewport cropping is active.
-
-### Video controls
-
-The VIDEO page exposes the renderer rather than presenting cosmetic placeholders:
-
-- **Output resolution** — windowed output-size presets filtered against the current desktop. Fullscreen uses the panel/display mode supplied by SDL/PortMaster.
-- **Internal resolution** — 50–200% render scale with full-output presentation. The game renders the 3D scene into the selected lower/higher-resolution framebuffer and then scales that image to the complete output surface; it does **not** shrink the viewport. On the 640x480 R36S panel, 75% therefore renders 480x360 internally and presents it across the full 640x480 panel. The overlay shows both dimensions.
-- **MSAA** — OFF/2x/4x/8x through Fast3D's multisample framebuffer/resolve path, clamped to what the GLES driver reports.
-- **Temporal AA (TXAA-style)** — optional low/high temporal accumulation on the final frame. This is an ARM-GE temporal AA implementation inspired by the same class of techniques; it is **not NVIDIA TXAA** and does not claim NVIDIA's proprietary implementation.
-- **Graphics presets** — N64 / Crisp / Enhanced / R36S / Performance. Preset identity is derived from the live renderer settings, so a manual change immediately becomes Custom instead of leaving a stale preset label. Every preset writes a complete owned setting set. Performance renders at 75% internally and upscales to full output, uses 1x MSAA, disables temporal AA, keeps anisotropy low, and uses the game's own model-LOD machinery at 50% distance to reduce model/matrix/render work without changing AI or simulation timing.
-- VSync, frame cap, texture filtering, mip filtering, anisotropic filtering, FOV, draw distance, LOD distance and framebuffer effects.
-- Live video settings are routed through `video.c` into Fast3D. Settings that can safely rebuild or reconfigure at runtime apply live; settings explicitly marked for restart are persisted instead.
-
-### System / performance controls
-
-The SYSTEM page combines live telemetry with conservative per-game tuning:
-
-- live FPS, CPU use, process RAM and available system memory;
-- current CPU governor, GPU governor and VM swappiness;
-- **CPU governor:** System / schedutil / performance / powersave;
-- **GPU governor:** System / simple_ondemand / performance / powersave;
-- **RAM profile:** System / Low Swap / Balanced / Game;
-- allocator trim action;
-- live overlay control-map verification count.
-
-Governor/RAM selections are intentionally **not** written to privileged sysfs/procfs by the game executable. They are saved in `ge007.ini`; the PortMaster launcher applies supported values on the **next launch** using PortMaster's privilege helper when required, records the original kernel values, and restores them when the game exits. Unsupported governors/endpoints are logged and skipped.
-
-The **Game** RAM profile currently uses a conservative temporary VM policy: swappiness 5 and `vm.vfs_cache_pressure=50`. It does not resize zram, drop caches, overclock hardware, pin clocks, or make persistent system changes.
-
-The overlay performs a startup wiring audit and writes the result to `log.txt` as:
-
-```text
-optionsoverlay: control map <wired>/<total> wired (<missing> missing)
-```
-
-A public build should report zero missing registered controls before the overlay is considered fully wired.
-
-## What works on real hardware
-
-The port has demonstrated:
-
-- native AArch64 execution on R36S-class hardware;
-- SDL2/OpenGL ES rendering;
-- boot, menus and intro;
-- in-mission rendering and gameplay;
-- controller integration;
-- PortMaster installation and launch;
-- first-run generation of required ROM-derived sidecars from the user's own ROM;
-- runtime logging and on-device diagnostics;
-- native **Start + Select** clean-exit chord back to EmulationStation, including while Port Control is open;
-- direct EmulationStation Ports launcher after installation;
-
-This is now a **beta-stage port**. Active work is concentrated on real-device correctness, campaign completion and polish rather than broad 32→64 conversion: full-campaign behavior, spawn/state transitions, AI/objectives/props, collision/navigation edge cases, GLES rendering defects, long-session audio behavior and broader handheld compatibility.
-
-## Port Control overlay
-
-**Port Control** is intended to be a major part of ARM-GE rather than a thin debug menu. Press **F10** on keyboard or **Select/Back** on a controller to open it. While open, gameplay input is captured by the overlay and mouse capture is released.
-
-The interface uses a resolution-scalable translucent glass layout and currently exposes:
-
-- output/window resolution and fullscreen state;
-- **50–200% render resolution scaling**;
-- VSync and frame cap;
-- **real Fast3D/GLES MSAA** at 1x/2x/4x/8x, clamped to the GPU's supported sample count;
-- experimental **Temporal AA / TAA-lite** LOW/HIGH modes;
-- texture, mipmap and anisotropic filtering;
-- framebuffer effects, FOV, draw distance and LOD distance;
-- mouse, controller, aim and key-bind controls;
-- audio latency/buffer/mixer controls;
-- gameplay accessibility and original GoldenEye cheat controls;
-- live CPU/FPS/RAM/audio/stage telemetry;
-- live CPU and GPU governor reporting;
-- optional per-game CPU governor, GPU governor and RAM/swappiness profiles;
-- a safe in-process allocator trim action.
-
-The R36S package intentionally ships conservative defaults: **1x MSAA, 100% render scale, TAA off and system-default governors**. More expensive graphics features are opt-in.
-
-The AArch64 render path also uses larger same-state Fast3D triangle batches and builds the isolated Fast3D/RSP translation layer at `-O3` (without `-ffast-math`). These optimizations reduce host/GLES submission overhead without changing the reconstructed GoldenEye simulation.
-
-CPU/GPU/RAM profiles do not run the game as root. Port Control stores small numeric profile selections in `ge007.ini`; on the next launch the PortMaster wrapper translates them into fixed known values, uses PortMaster's existing privileged helper only for the required sysfs/procfs writes, records the previous values, and restores them when the game exits.
-
-The temporal option is deliberately described as **TAA/TAA-lite**, not NVIDIA TXAA. It is a lightweight experimental temporal accumulation pass suitable for testing on the GLES target and is disabled while Port Control is open so the overlay itself remains stable.
+</div>
 
 ---
 
-# Install on R36S / dArkOSRE / PortMaster
+## What is ARM-GE?
 
-## Requirements
+ARM-GE is an engineering project to run the reconstructed **GoldenEye 007** codebase as a native ARM64 application on low-power Linux handhelds.
 
-You need:
+The current reference target is:
 
-1. an **AArch64 R36S-class handheld** running dArkOSRE/ArkOS-compatible PortMaster;
-2. a working **PortMaster** installation;
-3. the release file **`ge007-r36s-portmaster-beta.zip`** (the identical `ge007.zip` compatibility asset is also published);
-4. **Python 3 available on the handheld** for the one-time ROM-to-sidecar conversion;
-5. your own legally obtained **GoldenEye 007 US NTSC big-endian ROM**.
+- **Hardware:** R36S-class RK3326 handheld
+- **Architecture:** AArch64 / ARM64
+- **OS environment:** dArkOSRE / ArkOS-compatible Linux
+- **Launcher:** PortMaster / EmulationStation
+- **Graphics:** SDL2 + OpenGL ES
+- **Reference display:** 640×480
+- **Input:** SDL GameController / R36S controls
+- **ROM region:** GoldenEye 007 NTSC-U, big-endian
 
-No GoldenEye ROM, extracted game assets, `pcmodels.bin` or `pccg.bin` are distributed by this project.
+This is **not N64 emulation**. The reconstructed game code is compiled for ARM64 and runs as a native Linux executable, with host-side replacements for the N64 platform services and rendering path.
 
-### Required ROM
+---
 
-Filename:
+# Project goal
+
+The immediate goal is simple:
+
+> **Make the complete GoldenEye 007 campaign behave like a normal native handheld game on ARM64 Linux.**
+
+That means more than getting a first frame or a single mission running. A successful port needs the entire game loop to survive the architectural jump from the Nintendo 64's 32-bit MIPS environment to a modern 64-bit ARM Linux host.
+
+The project therefore covers:
+
+- 32-bit → 64-bit pointer and address semantics
+- N64 memory/token handling
+- stage/setup/model relocation
+- animation and object data
+- game-thread and scheduler behavior
+- controller input
+- audio
+- OpenGL → OpenGL ES compatibility
+- Fast3D host rendering
+- save/config persistence
+- campaign transitions
+- PortMaster packaging
+- first-run asset generation
+- performance and handheld usability
+
+## Long-term scope
+
+ARM-GE is also being used to identify the reusable engineering patterns required to move reconstructed N64 software onto modern ARM hardware.
+
+The longer-term direction is a cleaner host layer and toolchain that can help bridge other reconstructed N64 codebases to:
+
+- ARM64 Linux
+- SDL
+- OpenGL ES
+- handheld hardware
+- modern configuration/UI layers
+- native packaging systems such as PortMaster
+
+GoldenEye is the proving ground.
+
+---
+
+# Beta status
+
+ARM-GE moved from alpha to **beta** on **26 September 2026**.
+
+### Current release
+
+| | |
+|---|---|
+| Release | **ARM-GE R36S Beta — 2026-09-26** |
+| Tag | `r36s-beta-2026-09-26` |
+| Source revision | `0ec8a06429aaf8892cd803618db77c40ef7c289e` |
+| CI build | `36244612005` |
+| Architecture | AArch64 |
+| Build type | Release |
+| Graphics | SDL2 + OpenGL ES |
+| ROM target | GoldenEye 007 NTSC-U |
+| PortMaster ZIP | 1,102,377 bytes |
+| ZIP SHA-256 | `e12d8fb37deb670f4f47629393657be60f65ba30b7fe54cb976adfa6b8ee546b` |
+| Native binary | 1,798,512 bytes |
+| Binary SHA-256 | `0ae0578d9260c9d3ff4930fb933a96dad53692e5b9b417a5bd51e3c31f07a458` |
+
+### Downloads
+
+**Recommended:**
+
+- **[ge007-r36s-portmaster-beta.zip](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007-r36s-portmaster-beta.zip)** — PortMaster installer
+- **[Installer SHA-256](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007-r36s-portmaster-beta.zip.sha256)**
+
+Other release assets:
+
+- [ge007.aarch64](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.aarch64) — stripped native executable
+- [ge007.sha256](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.sha256) — executable checksum
+- [ge007.zip](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.zip) — compatibility installer filename
+- [ge007.zip.sha256](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007.zip.sha256)
+
+Full release page:
+
+**https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26**
+
+---
+
+# What we have achieved
+
+The port has moved well beyond bring-up.
+
+## Native ARM64 execution
+
+The reconstructed game now builds and runs as a native **AArch64 ELF** on the R36S target.
+
+Work completed includes large classes of host-width fixes around:
+
+- pointer truncation
+- pointer sign extension
+- N64 address tokens vs host pointers
+- stage/setup relocation
+- animation pointers
+- model pointers
+- title/language/background data
+- character action state
+- player state
+- save-state handling
+- stage teardown
+
+A semantic regression audit runs in CI before the reference ARM64 build to catch known pointer-width/address-class mistakes.
+
+## Rendering
+
+The game runs through a native handheld graphics stack using:
+
+- SDL2
+- OpenGL ES
+- the port's Fast3D host renderer
+- ARM64-specific renderer optimisations
+
+Working features include:
+
+- menus
+- intro
+- in-game 3D rendering
+- missions
+- HUD
+- framebuffer effects
+- resolution scaling
+- MSAA
+- texture filtering
+- anisotropic filtering
+- adjustable FOV
+- draw-distance controls
+- model LOD controls
+- optional temporal accumulation / TAA-lite
+
+The renderer includes an **R36S Performance** preset designed for the 640×480 target.
+
+## Gameplay
+
+The project has demonstrated:
+
+- game boot
+- front end
+- intro sequence
+- mission loading
+- player spawning
+- gameplay
+- weapons
+- controller input
+- mission state
+- direct mission loading during development
+- campaign transition fixes
+- save handling improvements
+- death/player teardown hardening
+- scripted camera protection
+- crosshair/aim stabilisation
+
+## Input
+
+The port integrates with PortMaster's controller mapping and SDL GameController.
+
+Implemented handheld behavior includes:
+
+- R36S controls
+- analogue input
+- controller navigation
+- mouse support on desktop builds
+- direct/absolute mouse-look work
+- **Start + Select** clean exit back to EmulationStation
+
+## Audio
+
+The native audio path is integrated and functional.
+
+Work has also been done around:
+
+- mixer lifecycle
+- stage-boundary SFX cleanup
+- audio stability
+- buffer/latency controls in Port Control
+
+## ARM-GE Glass Control Deck
+
+ARM-GE includes a custom resolution-scalable in-game control interface.
+
+It exposes:
+
+### Video
+
+- fullscreen/output resolution
+- 50–200% internal render scale
+- graphics presets
+- VSync
+- frame cap
+- MSAA
+- TAA-lite
+- texture filtering
+- mip filtering
+- anisotropic filtering
+- framebuffer effects
+- FOV
+- draw distance
+- LOD distance
+
+### System
+
+- live FPS
+- CPU usage
+- process RAM
+- available memory
+- CPU governor
+- GPU governor
+- VM swappiness
+- CPU profile
+- GPU profile
+- RAM profile
+- allocator trim
+
+### Input / gameplay / audio
+
+The overlay also exposes controller, mouse, gameplay and audio configuration.
+
+System tuning is deliberately handled by the PortMaster launcher rather than by running the game as root. Original kernel values are restored on exit.
+
+## PortMaster integration
+
+The release behaves like a normal handheld port:
+
+1. install the ZIP;
+2. provide the legal retail ROM;
+3. first launch generates the required host-side data;
+4. subsequent launches boot directly into the game.
+
+The game can be launched from the normal **Ports** section in EmulationStation.
+
+---
+
+# What is left on the table
+
+Beta does **not** mean the port is finished.
+
+The remaining work is now mostly real-game correctness, compatibility and polish rather than basic ARM64 bring-up.
+
+## Campaign validation
+
+Every mission and transition still needs systematic real-device completion testing.
+
+Priority areas include:
+
+- mission start state
+- spawn position/state
+- mission completion
+- level-to-level transitions
+- title/front-end handoff
+- death/restart paths
+- save progression
+- special mission scripts
+- end-game sequences
+
+## Stage / object semantics
+
+Some of the hardest remaining bugs are likely to be in systems where N64-era data structures mix:
+
+- pointers
+- segmented addresses
+- ROM offsets
+- runtime handles
+- packed setup data
+
+The main remaining classes are:
+
+- props
+- objectives
+- doors
+- scripted objects
+- collision edge cases
+- navigation/AI edge cases
+- mission-specific setup data
+
+## Graphics polish
+
+Remaining graphics work includes:
+
+- stage-specific rendering defects
+- framebuffer-effect validation
+- UI scaling edge cases
+- texture/filtering edge cases
+- GLES driver-specific behavior
+- performance tuning on constrained handheld GPUs
+
+## Audio polish
+
+The audio stack works, but longer sessions and stage transitions still need wider validation for:
+
+- degradation over time
+- stale SFX state
+- mixer lifecycle issues
+- buffer behavior across firmware/runtime combinations
+
+## Wider device support
+
+The R36S is the reference target.
+
+Other ARM64 Linux handhelds may work, but wider support requires testing across:
+
+- different Mali GPUs
+- different Mesa/Panfrost versions
+- different PortMaster runtimes
+- different controllers
+- different display modes
+- different firmware families
+
+---
+
+# The beta build
+
+The public beta is deliberately cleaner than the development environment used to create it.
+
+The release is compiled with:
+
+```text
+CMAKE_BUILD_TYPE=Release
+GE_BETA_RELEASE=ON
+GE_DEV_PROBES=OFF
+```
+
+The binary is stripped with:
+
+```bash
+aarch64-linux-gnu-strip --strip-unneeded ge007.aarch64
+```
+
+## Removed from the player build
+
+The beta excludes development-only instrumentation such as:
+
+- automated benchmark code
+- benchmark PortMaster launcher
+- DAM-lab debug HUD
+- render presentation probes
+- D-series developer probes
+- frame-dump/debug capture paths
+- benchmark CLI strings
+- debug symbols
+
+## Retained in the player build
+
+The beta keeps:
+
+- full game code
+- ARM-GE Glass Control Deck
+- normal runtime logging
+- crash handling
+- crash screen
+- CPU/FPS/RAM telemetry used by Port Control
+- controller support
+- graphics settings
+- audio settings
+- performance profiles
+- ROM verification
+- sidecar generation
+- save/config support
+- Start + Select exit
+
+---
+
+# What is included in the release?
+
+The recommended release file is:
+
+```text
+ge007-r36s-portmaster-beta.zip
+```
+
+Its installed structure is approximately:
+
+```text
+ports/
+├── GoldenEye 007.sh
+└── ge007/
+    ├── ge007.aarch64
+    ├── build-info.txt
+    ├── data/
+    │   ├── ge007.ini
+    │   └── .place-user-rom-and-sidecars-here
+    └── prepare-assets/
+        ├── ge007-convert
+        ├── prepare-assets.py
+        ├── d43_emit.py
+        ├── d69_emit.py
+        ├── d88_emit.py
+        ├── d88_propdefs.py
+        └── vendor/
+```
+
+The package also contains PortMaster metadata:
+
+- `port.json`
+- `gameinfo.xml`
+- release README
+
+## Not included
+
+The project does **not** distribute:
+
+- GoldenEye ROM images
+- `*.z64`
+- `*.n64`
+- `*.v64`
+- generated `pcmodels.bin`
+- generated `pccg.bin`
+- extracted copyrighted game data
+
+Those are deliberately rejected by the packager and CI release checks.
+
+---
+
+# ROM requirement
+
+You must provide your own legally obtained **GoldenEye 007 US NTSC big-endian ROM**.
+
+Expected filename:
 
 ```text
 ge007.ntsc-final.z64
@@ -209,163 +471,165 @@ Expected SHA-1:
 abe01e4aeb033b6c0836819f549c791b26cfde83
 ```
 
-The launcher checks the SHA-1 when `sha1sum` is available and refuses a known-wrong ROM.
+The launcher verifies the SHA-1 when `sha1sum` is available and refuses known-wrong ROMs.
 
-## Recommended installation
+---
 
-### Direct EmulationStation install
+# Install on R36S
 
-If PortMaster support is already installed on the firmware, **the PortMaster application does not need to be opened to launch or install this build manually**.
+## Requirements
 
-Extract `ge007-r36s-portmaster-beta.zip` directly into the active ROM volume's `ports/` directory. The release also publishes the same installer payload as `ge007.zip` for compatibility. The resulting layout must include:
+You need:
+
+- an ARM64 R36S-class handheld
+- dArkOSRE / compatible ArkOS environment
+- working PortMaster support files
+- Python 3 on the handheld for first-run conversion
+- the ARM-GE beta ZIP
+- your own verified GoldenEye 007 NTSC-U ROM
+
+## Method 1 — PortMaster autoinstall
+
+Download:
+
+**[ge007-r36s-portmaster-beta.zip](https://github.com/bitflipunix-re/ge-pc-port/releases/download/r36s-beta-2026-09-26/ge007-r36s-portmaster-beta.zip)**
+
+Copy it to the PortMaster autoinstall directory.
+
+Typical first-ROM-volume path:
+
+```text
+/roms/tools/PortMaster/autoinstall/
+```
+
+If your firmware uses the second ROM volume, use the corresponding `roms2` PortMaster path.
+
+Then:
+
+1. start PortMaster;
+2. allow it to process the ZIP;
+3. exit back to EmulationStation;
+4. locate the installed `ge007/` directory;
+5. copy your ROM to:
+
+```text
+/roms/ports/ge007/data/ge007.ntsc-final.z64
+```
+
+6. launch **GoldenEye 007** from the Ports system.
+
+## Method 2 — Direct EmulationStation install
+
+If PortMaster support is already installed, you can extract the ZIP directly into the active ROM volume's `ports/` directory.
+
+After extraction you should have:
 
 ```text
 /roms/ports/GoldenEye 007.sh
 /roms/ports/ge007/
 ```
 
-(or the equivalent `/roms2/ports/` path).
-
-The root launcher is executable in the package and self-locates the adjacent `ge007/` directory. Put the ROM under `ge007/data/`, refresh/restart EmulationStation, and launch **GoldenEye 007** from the Ports system. The launcher still uses PortMaster's installed `control.txt` and device helpers; it simply does not require opening the PortMaster UI.
-
-### PortMaster autoinstall
-
-For ArkOS/dArkOSRE, copy `ge007-r36s-portmaster-beta.zip` into the PortMaster autoinstall directory (or use the compatibility filename `ge007.zip`):
+Then place the ROM at:
 
 ```text
-/roms/tools/PortMaster/autoinstall/
+/roms/ports/ge007/data/ge007.ntsc-final.z64
 ```
 
-If your setup uses the second ROM volume, use the corresponding `roms2` PortMaster tree instead.
+Refresh or restart EmulationStation and launch **GoldenEye 007**.
 
-Then:
+The PortMaster application itself does not need to remain open. The launcher uses PortMaster's installed control/device helpers.
 
-1. Start the **PortMaster** application.
-2. Allow PortMaster to process the autoinstall ZIP.
-3. After installation, the game directory on the current R36S target is normally:
+---
 
-   ```text
-   /roms/ports/ge007/
-   ```
+# First launch
 
-4. Copy your ROM to:
+The first launch performs the complete setup path automatically.
 
-   ```text
-   /roms/ports/ge007/data/ge007.ntsc-final.z64
-   ```
+The launcher:
 
-   If PortMaster is using a different ROM root, place it under the installed `ge007/data/` directory for that root.
+1. loads the PortMaster environment;
+2. loads controller mappings;
+3. verifies `ge007.aarch64`;
+4. checks the ROM;
+5. verifies the ROM SHA-1 when possible;
+6. checks whether host-format sidecars already exist;
+7. runs the bundled Python converter if required;
+8. generates the ROM-derived sidecars locally;
+9. verifies the generated output;
+10. applies any selected temporary performance profile;
+11. launches the game.
 
-5. Launch **GoldenEye 007** from EmulationStation.
+Generated files include:
 
-PortMaster's current documentation also supports installing offline ports by placing their ZIP in the appropriate autoinstall directory and starting PortMaster.
+```text
+ge007/data/pcmodels-ntsc-final/pcmodels.bin
+ge007/data/pccg-ntsc-final/pccg.bin
+```
 
-## First launch
+These stay on the user's device.
 
-On first launch the wrapper:
+Subsequent launches skip conversion when the required files are already present.
 
-1. loads PortMaster's device/CFW control environment;
-2. verifies that `ge007.aarch64` exists;
-3. checks for the required ROM;
-4. verifies the ROM SHA-1 when possible;
-5. checks whether the generated sidecars already exist;
-6. runs the bundled Python converter if they do not;
-7. verifies that these files were generated:
+---
 
-   ```text
-   ge007/data/pcmodels-ntsc-final/pcmodels.bin
-   ge007/data/pccg-ntsc-final/pccg.bin
-   ```
+# Runtime files
 
-8. launches `ge007.aarch64`.
-
-The ROM and generated sidecars remain local to the user's device.
-
-## Runtime files
-
-Important installed paths:
+A normal installed game directory looks like:
 
 ```text
 ge007/
 ├── ge007.aarch64
-├── data/
-│   ├── ge007.ntsc-final.z64        # user supplied
-│   ├── ge007.ini
-│   ├── pcmodels-ntsc-final/        # generated locally
-│   └── pccg-ntsc-final/            # generated locally
-├── prepare-assets/
-├── conf/
 ├── build-info.txt
+├── conf/
+├── data/
+│   ├── ge007.ntsc-final.z64
+│   ├── ge007.ini
+│   ├── pcmodels-ntsc-final/
+│   └── pccg-ntsc-final/
+├── prepare-assets/
 └── log.txt
 ```
 
-`log.txt` is recreated on launch and is the first file to collect when reporting a crash or startup failure.
-
-## Common installation failures
-
-### ROM missing
-
-The log will contain:
-
-```text
-[ROM] MISSING
-```
-
-Confirm the ROM is named exactly:
-
-```text
-ge007.ntsc-final.z64
-```
-
-and is inside the installed `ge007/data/` directory.
-
-### Wrong ROM
-
-If the SHA-1 does not match:
-
-```text
-abe01e4aeb033b6c0836819f549c791b26cfde83
-```
-
-the launcher exits instead of generating sidecars.
-
-### Python 3 missing
-
-First-run conversion requires `python3`. If it is unavailable the launcher reports:
-
-```text
-[Extract] python3 not available on this firmware
-```
-
-A PortMaster installation with the required runtime support or a firmware providing Python 3 is required for first-run conversion.
-
-### Sidecar conversion failure
-
-Check:
+The first file to collect when reporting a startup failure or crash is:
 
 ```text
 ge007/log.txt
 ```
 
-The launcher prints the converter return code and refuses to start the game if the required sidecars are still missing.
+---
+
+# Controls
+
+PortMaster supplies the SDL controller mapping for the handheld.
+
+Important port controls:
+
+| Action | Control |
+|---|---|
+| Open Port Control | Select / Back |
+| Keyboard Port Control | F10 |
+| Exit to EmulationStation | Start + Select |
+| Navigate Port Control | D-pad / left stick |
+| Change Port Control page | LB / RB |
+| Increase / activate | A / X |
+| Decrease / back | B / Y |
+| Close Port Control | Start |
+
+The original GoldenEye in-game controller configuration remains available inside the game.
 
 ---
 
 # Build from source
 
-## Reference build environment
+The reference build is performed on **Ubuntu 24.04 x86_64** and cross-compiled to **AArch64 Linux**.
 
-The reproducible reference build currently uses **Ubuntu 24.04 x86_64** and cross-compiles to **AArch64 Linux**.
-
-The canonical build definition is:
+The canonical CI definition is:
 
 ```text
 .github/workflows/build-r36s.yml
 ```
 
-If local setup and CI ever disagree, the workflow is the source of truth.
-
-The build uses **GCC**, not Clang, because the reconstructed codebase relies on structure/inheritance behavior supported by GCC extensions.
+If this README and CI ever disagree, the workflow is the source of truth.
 
 ## Clone
 
@@ -374,50 +638,18 @@ git clone https://github.com/bitflipunix-re/ge-pc-port.git
 cd ge-pc-port
 ```
 
-## Build dependencies
+## Install build dependencies
 
-Host/build tools:
-
-```text
-cmake
-make
-ccache
-pkg-config
-unzip
-file
-python3
-git
-gcc-aarch64-linux-gnu
-g++-aarch64-linux-gnu
-binutils-aarch64-linux-gnu
-libc6-dev-arm64-cross
-```
-
-Graphics/runtime development dependencies:
-
-```text
-libsdl2-dev
-libgles2-mesa-dev
-libegl1-mesa-dev
-zlib1g-dev
-libsdl2-2.0-0:arm64
-libgles2:arm64
-libegl1:arm64
-zlib1g:arm64
-```
-
-## Ubuntu 24.04 dependency setup
-
-Enable the ARM64 package architecture:
+Enable ARM64 packages:
 
 ```bash
 sudo dpkg --add-architecture arm64
+sudo apt-get update
 ```
 
-The GitHub Actions runner explicitly configures the Ubuntu amd64 archive and the Ubuntu Ports ARM64 archive before installation. On a normal Ubuntu 24.04 machine, make sure apt has valid sources for both architectures, then run:
+Install the required tools and libraries:
 
 ```bash
-sudo apt-get update
 sudo apt-get install -y \
   cmake make ccache pkg-config unzip file python3 git \
   gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
@@ -426,7 +658,9 @@ sudo apt-get install -y \
   libsdl2-2.0-0:arm64 libgles2:arm64 libegl1:arm64 zlib1g:arm64
 ```
 
-The CI build also extracts the ARM64 SDL2 development package so its target-specific headers are available:
+The reference workflow uses separate Ubuntu archive definitions for amd64 and ARM64 packages. If `apt` cannot locate ARM64 dependencies, mirror the source configuration in `.github/workflows/build-r36s.yml`.
+
+## Extract ARM64 SDL2 development headers
 
 ```bash
 mkdir -p /tmp/sdl2-arm64-dev
@@ -436,7 +670,7 @@ dpkg-deb -x libsdl2-dev_*_arm64.deb /tmp/sdl2-arm64-dev
 cd -
 ```
 
-Ensure the target linker names exist:
+Ensure target linker names exist:
 
 ```bash
 sudo ln -sf libSDL2-2.0.so.0 /usr/lib/aarch64-linux-gnu/libSDL2.so
@@ -445,7 +679,7 @@ sudo ln -sf libEGL.so.1 /usr/lib/aarch64-linux-gnu/libEGL.so
 sudo ln -sf libz.so.1 /usr/lib/aarch64-linux-gnu/libz.so
 ```
 
-## Run the ARM64 semantic regression gate
+## Run the ARM64 semantic audit
 
 Before compiling:
 
@@ -453,11 +687,9 @@ Before compiling:
 python3 work/goldeneye-pc-port/tools_pc/arm64_semantic_audit.py
 ```
 
-This catches known classes of accidental host-pointer truncation and token/pointer confusion before a build is published.
+This checks known classes of accidental host-pointer truncation and address/token confusion.
 
-## Configure the R36S AArch64/GLES build
-
-From the repository root:
+## Configure the beta-equivalent build
 
 ```bash
 export PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig
@@ -484,21 +716,14 @@ cmake -S work/goldeneye-pc-port -B build/arm64 \
   -DCMAKE_CXX_FLAGS="-DUSE_GLES=1 -I/tmp/sdl2-arm64-dev/usr/include/aarch64-linux-gnu"
 ```
 
-A correct configure must report an AArch64 target and the output binary `ge007.aarch64`.
-
-Normal builds compile the Fast3D render path without the historical D-series diagnostic probes.
-
-For a player-equivalent beta build, configure with:
+A correct configure reports:
 
 ```text
--DCMAKE_BUILD_TYPE=Release
--DGE_BETA_RELEASE=ON
--DGE_DEV_PROBES=OFF
+Target arch: aarch64
+Output binary: ge007.aarch64
+ARM-GE beta/player build: diagnostics stripped
+Fast3D developer probes: disabled
 ```
-
-`GE_BETA_RELEASE=ON` compiles the development benchmark hooks, standalone DAM-lab HUD, presentation probes and frame-dump/debug capture paths out of the player binary while retaining the telemetry backend used by Port Control.
-
-To reproduce a render investigation that relies on environment variables such as `GE_D172`, `GE_D229`, `GE_D236*`, `GE_D288` or texture dumps, use a development build with `-DGE_DEV_PROBES=ON`. Do not use developer probes for performance testing or release packages.
 
 ## Compile
 
@@ -506,10 +731,16 @@ To reproduce a render investigation that relies on environment variables such as
 cmake --build build/arm64 -j"$(nproc)"
 ```
 
-Expected output:
+Output:
 
 ```text
 build/arm64/ge007.aarch64
+```
+
+## Strip the player binary
+
+```bash
+aarch64-linux-gnu-strip --strip-unneeded build/arm64/ge007.aarch64
 ```
 
 ## Verify the binary
@@ -526,7 +757,9 @@ The ELF header must report:
 Machine: AArch64
 ```
 
-## Build the PortMaster package
+---
+
+# Build the PortMaster installer
 
 From the repository root:
 
@@ -536,21 +769,13 @@ python3 package.py \
   --out dist
 ```
 
-Expected output:
+Output:
 
 ```text
 dist/ge007.zip
 ```
 
-The packager confirms the input executable is AArch64 and deliberately refuses to package:
-
-- `*.z64`
-- `*.n64`
-- `*.v64`
-- `pcmodels.bin`
-- `pccg.bin`
-
-## Verify the PortMaster package
+Validate it:
 
 ```bash
 unzip -t dist/ge007.zip
@@ -559,134 +784,155 @@ unzip -p dist/ge007.zip port.json | python3 -m json.tool
 sha256sum dist/ge007.zip
 ```
 
-The archive must contain at least:
+The packager refuses to ship ROM images and generated ROM-derived sidecars.
 
-```text
-port.json
-gameinfo.xml
-README.md
-GoldenEye 007.sh
-ge007/ge007.aarch64
-ge007/prepare-assets/
+---
+
+# Development builds
+
+The beta profile intentionally removes development instrumentation.
+
+For renderer/port investigation, configure without `GE_BETA_RELEASE` and enable only the diagnostics you need.
+
+For example:
+
+```bash
+-DGE_DEV_PROBES=ON
 ```
 
-and must not contain any ROM or generated ROM-derived sidecar binary.
+Development builds may include:
 
-## Build products
+- Fast3D diagnostic probes
+- frame dumping
+- benchmark hooks
+- DAM-lab instrumentation
+- additional logging
 
-The CI artifact contains:
+Those tools are useful for engineering work but are intentionally absent from the public player package.
+
+---
+
+# Repository layout
 
 ```text
-dist/ge007.zip
-dist/ge007.zip.sha256
-dist/ge007.zip.list
-build/arm64/ge007.aarch64
-build/arm64/ge007.elf-header.txt
-build/arm64/ge007.sha256
+.
+├── .github/workflows/          CI / release automation
+├── bundle/prepare-assets/      first-run conversion bundle
+├── docs/                       engineering documentation
+├── port/                       PortMaster metadata and launcher
+├── work/goldeneye-pc-port/     GoldenEye host-port source tree
+├── build-arm.sh                ARM build helper
+├── package.py                  PortMaster packager
+└── README.md
+```
+
+Important port-layer areas inside `work/goldeneye-pc-port/` include:
+
+```text
+port/src/       host platform implementation
+port/include/   host interfaces
+port/fast3d/    rendering backend
+tools_pc/       development/audit tooling
+src/            reconstructed game code
 ```
 
 ---
 
-# Architecture and portability work
+# Architecture notes
 
-Porting reconstructed N64 software to a modern host is not a mechanical 32-bit-to-64-bit conversion.
+One of the central problems in this port is that not every 32-bit-looking value in GoldenEye means the same thing.
 
-A recurring rule in this project is to classify every address-like value as one of:
+The port must distinguish between:
 
-1. **native host pointer**
-2. **N64 / ROM / segmented-address token**
-3. **ordinary integer or game state**
+1. **native host pointers**
+2. **N64 / ROM / segmented address tokens**
+3. **ordinary integer game state**
 
-That distinction drives whole-class LP64 fixes instead of one-crash-at-a-time patches.
+Blindly widening every value breaks the game just as easily as leaving a host pointer at 32 bits.
 
-Recurring problem areas include:
+Much of the ARM64 work has therefore been done by semantic class rather than crash-by-crash patching.
 
-- MIPS-era signedness and pointer-width assumptions;
-- binary structure layout and ABI dependencies;
-- segmented and ROM address translation;
-- desktop OpenGL behavior unavailable in OpenGL ES;
-- gameplay/runtime behavior that depended on N64-era invariants;
-- generated sidecar and asset formats crossing host architectures.
+That includes:
 
-The longer-term goal is to turn these lessons into reusable N64-to-modern-host portability tooling and documentation.
+- sign-extension fixes
+- zero-extension fixes
+- token preservation
+- host-pointer widening
+- setup/stage rebasing
+- model/animation address handling
+- lifetime/teardown fixes
+- host-memory reservation
+- renderer address translation
 
-## Repository layout
+---
 
-```text
-.github/workflows/
-    build-r36s.yml              reference AArch64/GLES build + packaging proof
-    discord-main-builds.yml     green-main build/changelog notification flow
-    publish-main-release.yml    verified release publisher
+# Performance philosophy
 
-work/goldeneye-pc-port/         source-port tree used for the ARM64 build
-    tools_pc/
-        arm64_semantic_audit.py semantic regression gate
+The port aims to improve host efficiency without changing GoldenEye's simulation semantics.
 
-port/
-    GoldenEye 007.sh            PortMaster launcher
-    port.json                   PortMaster metadata
-    gameinfo.xml
-    README.md                   installed-port notes
+Current work includes:
 
-bundle/prepare-assets/          ROM-to-sidecar converter and required tables
-package.py                      verified PortMaster ZIP assembler
-watch/                          PortMaster exit-hotkey helper
-docs/                           project/development documentation
-PRESS.md                        media / creator briefing
-SHOWCASE.md                     public showcase notes
-```
+- larger same-state Fast3D triangle batches
+- optimized Fast3D/RSP translation code
+- configurable internal resolution
+- model LOD controls
+- R36S performance preset
+- optional CPU/GPU/RAM launch profiles
 
-## CI and release policy
+Performance profiles do **not** permanently alter system settings.
 
-A release-worthy main build must:
+The launcher records supported original values and restores them when the game exits.
 
-1. pass `arm64_semantic_audit.py`;
-2. configure as AArch64;
-3. compile `ge007.aarch64`;
-4. verify the ELF machine type;
-5. package `ge007.zip`;
-6. pass ZIP integrity and PortMaster metadata checks;
-7. prove no ROM or generated sidecars are present;
-8. upload the verified build artifact;
-9. have release publication re-check the payload before publishing.
+---
 
-This keeps the public release tied to a known green source revision.
+# Reporting problems
 
-## Contributing
+When reporting a real-device issue, include:
 
-Help is welcome, particularly with:
+- device model
+- firmware
+- PortMaster version if known
+- mission / menu / exact reproduction path
+- whether the issue occurs from a fresh save
+- relevant graphics preset/settings
+- `ge007/log.txt`
+- crash screen values if shown
 
-- real-device R36S testing;
-- GLES rendering;
-- ARM64/LP64 semantics;
-- stage/setup/model correctness;
-- AI, objectives, props and collision/navigation;
-- long-session audio;
-- PortMaster compatibility;
-- documentation and reproducible bug reports.
+For stage-specific bugs, include the exact stage and what happened immediately before the failure.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+---
 
-When reporting a device problem, include `ge007/log.txt`, the release/source revision, device/CFW, and the exact stage/action that triggered the problem.
+# Legal / project boundaries
 
-For journalists, video creators and technical writers, see [PRESS.md](PRESS.md).
+This repository does not distribute the GoldenEye 007 retail ROM or generated ROM-derived game data.
 
-## Lineage and attribution
+Users must supply their own legally obtained compatible ROM.
 
-This project builds on the work of:
+The packaging and release workflow explicitly rejects ROM images and generated sidecar binaries.
 
-- [n64decomp/007](https://github.com/n64decomp/007) — GoldenEye 007 reconstruction/decompilation;
-- [jkdansereau/goldeneye-pc-port](https://github.com/jkdansereau/goldeneye-pc-port) — PC/source-port foundation;
-- [fgsfdsfgs/perfect_dark](https://github.com/fgsfdsfgs/perfect_dark) and related Fast3D lineage used by the renderer.
+ARM-GE is an independent engineering project built around the reconstructed GoldenEye codebase and the surrounding open-source work that made that reconstruction possible.
 
-ARM64/R36S work and PortMaster packaging are maintained by **bitflipunix** and **Tomobobo710**, with contributions welcomed from the wider community.
+See the repository notices and source files for applicable attribution and licensing information.
 
-Existing copyright and license notices in inherited and third-party code are preserved. See [NOTICE.md](NOTICE.md) and the license files within the source tree.
+---
 
-## Legal
+# Credits
 
-No ROM is distributed by this project. No generated ROM-derived sidecar binaries are included in the PortMaster package.
+ARM64/R36S port work and PortMaster integration:
 
-GoldenEye 007 and associated names and trademarks belong to their respective rights holders. This is a **non-commercial fan preservation/porting effort** and is not affiliated with or endorsed by Nintendo, Rare, MGM, EON Productions, Danjaq, or other rights holders.
+- **bitflipunix**
+- **Tomobobo710**
 
-Any future commercial activity around this work is intended to concern original tooling, engineering services, educational material or creator content—not distribution or sale of GoldenEye game data.
+This project also depends on years of work by the GoldenEye decompilation/reconstruction community and PC-port contributors.
+
+---
+
+<div align="center">
+
+## ARM-GE Beta
+
+**Native GoldenEye 007 on ARM64 Linux handheld hardware.**
+
+**[Download the current R36S beta](https://github.com/bitflipunix-re/ge-pc-port/releases/tag/r36s-beta-2026-09-26)**
+
+</div>
