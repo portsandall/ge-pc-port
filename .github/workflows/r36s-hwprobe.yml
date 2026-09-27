@@ -1,0 +1,86 @@
+name: R36S hardware probe
+
+on:
+  push:
+    branches: [r36s-hwprobe-portmaster]
+    paths:
+      - 'probe/**'
+      - '.github/workflows/r36s-hwprobe.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: r36s-hwprobe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install AArch64 cross dependencies
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo sed -i 's/^deb http/deb [arch=amd64] http/' /etc/apt/sources.list
+          sudo tee /etc/apt/sources.list.d/arm64.list >/dev/null <<'APT'
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy main universe
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main universe
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main universe
+          APT
+          sudo apt-get update
+          sudo apt-get install -y \
+            gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu python3 zip unzip file \
+            libc6-dev-arm64-cross \
+            libdrm-dev:arm64 libgbm-dev:arm64 libegl1-mesa-dev:arm64 libgles2-mesa-dev:arm64 \
+            libvulkan-dev
+
+      - name: Build probe
+        run: |
+          mkdir -p probe/build
+          aarch64-linux-gnu-gcc -std=gnu11 -O2 -g0 -Wall -Wextra -Werror \
+            -I/usr/include/libdrm \
+            probe/src/r36s-hwprobe.c \
+            -o probe/build/r36s-hwprobe.aarch64 \
+            -L/usr/lib/aarch64-linux-gnu \
+            -Wl,-rpath-link,/usr/lib/aarch64-linux-gnu \
+            -ldrm -lgbm -lEGL -lGLESv2 -ldl
+
+      - name: Verify AArch64 binary
+        run: |
+          file probe/build/r36s-hwprobe.aarch64 | tee probe/build/file.txt
+          aarch64-linux-gnu-readelf -h probe/build/r36s-hwprobe.aarch64 | tee probe/build/elf-header.txt
+          grep -q 'Machine:.*AArch64' probe/build/elf-header.txt
+          aarch64-linux-gnu-readelf -d probe/build/r36s-hwprobe.aarch64 | tee probe/build/dynamic.txt
+          sha256sum probe/build/r36s-hwprobe.aarch64 | tee probe/build/r36s-hwprobe.sha256
+
+      - name: Validate launcher and metadata
+        run: |
+          bash -n 'probe/port/R36S Hardware Probe.sh'
+          python3 -m json.tool probe/port/port.json >/dev/null
+          python3 -m py_compile probe/package.py
+
+      - name: Build PortMaster package
+        run: |
+          python3 probe/package.py --binary probe/build/r36s-hwprobe.aarch64 --out probe/dist
+          unzip -t probe/dist/r36s-hardware-probe.zip
+          unzip -l probe/dist/r36s-hardware-probe.zip | tee probe/dist/zip.list
+          unzip -Z1 probe/dist/r36s-hardware-probe.zip | grep -qx 'port.json'
+          unzip -Z1 probe/dist/r36s-hardware-probe.zip | grep -qx 'gameinfo.xml'
+          unzip -Z1 probe/dist/r36s-hardware-probe.zip | grep -qx 'R36S Hardware Probe.sh'
+          unzip -Z1 probe/dist/r36s-hardware-probe.zip | grep -qx 'r36sprobe/r36s-hwprobe.aarch64'
+          sha256sum probe/dist/r36s-hardware-probe.zip | tee probe/dist/r36s-hardware-probe.zip.sha256
+
+      - name: Upload PortMaster probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: r36s-hardware-probe-portmaster
+          path: |
+            probe/dist/r36s-hardware-probe.zip
+            probe/dist/r36s-hardware-probe.zip.sha256
+            probe/dist/zip.list
+            probe/build/r36s-hwprobe.aarch64
+            probe/build/r36s-hwprobe.sha256
+            probe/build/elf-header.txt
+            probe/build/dynamic.txt
+          if-no-files-found: error
