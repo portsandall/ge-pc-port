@@ -8694,7 +8694,11 @@ void bondviewSelectCuff(Model *model, ModelFileHeader *header, s32 switchindex)
 
     index = switchindex + 1;
 
+#ifdef PORT
+    if (base[1] != NULL)
+#else
     if (((void *) (index * 0)) != base[1])
+#endif
     {
         node = switches[index];
         rwdata = (s32 *) modelGetNodeRwData(model, node);
@@ -8809,7 +8813,11 @@ Gfx *bondviewRenderWatch(Gfx *gdl)
     guPerspective(perspmtx, &perspNorm, g_CurrentPlayer->zoominfovy, 1.4545455f, 10.0f, 300.0f, 1.0f);
 #endif
  
+#ifdef PORT
+    gSPMatrix(gdl++, OS_PHYSICAL_TO_K0((uintptr_t)perspmtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+#else
     gSPMatrix(gdl++, OS_PHYSICAL_TO_K0((u32) perspmtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+#endif
     gSPPerspNormalize(gdl++, perspNorm);
 
     // Keep this nested block for matching.
@@ -10831,7 +10839,7 @@ s32 playerTick(PropRecord *prop)
             {
                 cur = ppointers[index]->players_cur_animation;
  
-                if (cur == (g_bondviewBondDeathAnimations[i] + ((s32) ptr_animation_table)))
+                if (cur == (g_bondviewBondDeathAnimations[i] + ((s32)(uintptr_t)ptr_animation_table)))
                 {
                     found = 1;
                 }
@@ -10844,7 +10852,7 @@ s32 playerTick(PropRecord *prop)
             }
             else
             {
-                anim = g_bondviewBondDeathAnimations[randomGetNext() % g_bondviewBondDeathAnimationsCount] + ((s32) ptr_animation_table);
+                anim = g_bondviewBondDeathAnimations[randomGetNext() % g_bondviewBondDeathAnimationsCount] + ((s32)(uintptr_t)ptr_animation_table);
                 angle = 0.5f;
             }
  
@@ -11026,7 +11034,7 @@ lean_return_to_centre:
  
             if (fa->anim != 0)
             {
-                anim = fa->anim + (s32) ptr_animation_table;
+                anim = fa->anim + (s32)(uintptr_t)ptr_animation_table;
             }
  
             angle *= fa->x;
@@ -11084,7 +11092,14 @@ join_768:
             if (ppointers[index]->bodyModel->anim2 == NULL)
             {
                 startframe = (0.0f <= frame) ? (frame) : (0.0f);
+#ifdef PORT
+                /* players_cur_animation is an N64-width V1 runtime-address token. */
+                modelSetAnimation(ppointers[index]->bodyModel,
+                                  (ModelAnimation *)(uintptr_t)(u32)anim,
+                                  0, startframe, angle, 16.0f);
+#else
                 modelSetAnimation(ppointers[index]->bodyModel, (ModelAnimation *) anim, 0, startframe, angle, 16.0f);
+#endif
                 ppointers[index]->players_cur_animation = anim;
                 ppointers[index]->field_1288 = angle;
  

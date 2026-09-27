@@ -39,6 +39,7 @@
 #include "glass.h"
 #include "gun.h"
 #include "image_bank.h"
+#include "initanitable.h"
 #include "lv.h"
 #include "language.h"
 #include "math_floor.h"
@@ -219,7 +220,7 @@ void objSettle(struct ObjectRecord *arg0, struct coord3d *arg1);
 void door7F054FB4(struct DoorRecord *arg0);
 void door7F0526EC(DoorRecord *door, Mtxf *rhs);
 void objBreakCCTVGlass(ObjectRecord *obj);
-void save_img_index_to_obj_ani_slot(MonitorRecord *mon, void *unk88);
+void save_img_index_to_obj_ani_slot(MonitorRecord *mon, s32 imageIndex);
 void save_ptr_monitor_ani_code_to_obj_ani_slot(MonitorRecord *mon, void *image);
 s32 sub_GAME_7F06C010(ModelHitEntry **entryptr, coord3d *modelRayStart, coord3d *modelRayDir, Model **outModel, ModelNode **outNode);
 AmmoCrateRecord *ammocrateAllocate(void);
@@ -3905,7 +3906,11 @@ s32 sub_GAME_7F0448A8(struct PropRecord *argProp)
             if ((prop->type == PROP_TYPE_VIEWER) || (prop->type == PROP_TYPE_CHR))
             {
                 temp_v0_2 = prop->obj;
+                #ifdef PORT
+                if ((temp_v0_2 == NULL) || !((uintptr_t)temp_v0_2->model & 0x400u))
+#else
                 if ((temp_v0_2 == NULL) || !((s32) temp_v0_2->model & 0x400))
+#endif
                 {
                     chrpropGetCollisionBounds(prop, &radius, &height, &arbitratyNumber);
 
@@ -5727,7 +5732,7 @@ s32 objTick(struct PropRecord *prop)
 #endif
 				temp_s0_6 = render_pad2F4->model;
 
-				if (temp_s0_6->anim == (ModelAnimation *)animation_table_ptrs2[1]) /* D32/D33 */
+				if (temp_s0_6->anim == (ModelAnimation *)GE_ANIMTABLE_ENTRY_PTR(animation_table_ptrs2, 1)) /* D32/D33 */
 				{
 					modelSetAnimTranslationScale(temp_s0_6, 10.438f);
 					setsubroty(render_pad2F4->model, M_PI_F);
@@ -6777,9 +6782,14 @@ void monitorSetImageByNum(MonitorRecord *mon, s32 monAnimID)
 }
 
 
-void save_img_index_to_obj_ani_slot(MonitorRecord *mon, void *unk88)
+void save_img_index_to_obj_ani_slot(MonitorRecord *mon, s32 imageIndex)
 {
-    mon->tconfig = unk88;
+#ifdef PORT
+    /* Monitor scripts encode a small image index in this pointer-typed slot. */
+    mon->tconfig = (sImageTableEntry *)(uintptr_t)(u32)imageIndex;
+#else
+    mon->tconfig = imageIndex;
+#endif
 }
 
 
@@ -7051,10 +7061,17 @@ Gfx *process_monitor_animation_microcode(Model *model, ModelNode *node, MonitorR
         vertices[2] = rodata->DisplayListCollisions.Vertices[2];
         vertices[3] = rodata->DisplayListCollisions.Vertices[3];
 
+#ifdef PORT
+        if ((uintptr_t)screen->tconfig < 100u)
+        {
+            tconfig = &monitorimages[(s32)(uintptr_t)screen->tconfig];
+        }
+#else
         if ((u32)screen->tconfig < 100) 
         {
             tconfig = &monitorimages[(s32)screen->tconfig];
-        } 
+        }
+#endif 
         else 
         {
             tconfig = screen->tconfig;
@@ -7205,7 +7222,7 @@ void sub_GAME_7F04AC20(PropRecord *prop, ModelRenderData *mrData, s32 arg2)
 
         if (destroyed)
         {
-            destroyed = get_BONDdata_field_10E0();
+            destroyed = get_BONDdata_field_10E0() != NULL;
             destroyed = destroyed != 0;
         }
 
@@ -8857,7 +8874,7 @@ bool propobjFindHit(Model *model, ModelNode *startNode, coord3d *rayPos, coord3d
                     {
                         if (rwdata->gdl == rodata->Primary)
                         {
-                            s3 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((u32)rodata->Primary & 0xffffff));
+                            s3 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((uintptr_t)rodata->Primary & 0xffffffu));
                         }
                         else
                         {
@@ -8866,7 +8883,7 @@ bool propobjFindHit(Model *model, ModelNode *startNode, coord3d *rayPos, coord3d
 
                         if (rodata->Secondary != NULL)
                         {
-                            s5 = (void *)((uintptr_t)rodata->BaseAddr + ((u32)rodata->Secondary & 0xffffff));
+                            s5 = (void *)((uintptr_t)rodata->BaseAddr + ((uintptr_t)rodata->Secondary & 0xffffffu));
                         }
 
                         vertices = rwdata->Vertices;
@@ -8880,11 +8897,11 @@ bool propobjFindHit(Model *model, ModelNode *startNode, coord3d *rayPos, coord3d
 
                     if (rodata->Primary != NULL)
                     {
-                        s3 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((u32)rodata->Primary & 0xffffff));
+                        s3 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((uintptr_t)rodata->Primary & 0xffffffu));
 
                         if (rodata->Secondary != NULL)
                         {
-                            s5 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((u32)rodata->Secondary & 0xffffff));
+                            s5 = (Gfx *)((uintptr_t)rodata->BaseAddr + ((uintptr_t)rodata->Secondary & 0xffffffu));
                         }
 
                         vertices = (void *)(uintptr_t)rodata->BaseAddr;
@@ -14579,7 +14596,11 @@ void sub_GAME_7F056690(void)
 #else
                     new_var = &s3->datas[s0->RwDataIndex];
 #endif
+#ifdef PORT
+                    if ((void *)s0->Vertices != (void *)*new_var)
+#else
                     if ((s32)s0->Vertices != (s32)*new_var)
+#endif
                     {
                         objFreePermanently(s1, 1);
                         return;
