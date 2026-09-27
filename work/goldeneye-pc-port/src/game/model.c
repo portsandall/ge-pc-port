@@ -6187,7 +6187,7 @@ s32 loadAnimationFrame(ModelAnimation* anim, s32 frame, ModelSkeleton* unused)
     {
         // Get dest from this D_80036414 which points to an array. Align to 16 bytes.
 #ifdef PORT
-        dest = (u32)ALIGN16_a((uintptr_t)D_80036414->animBufferPtr2);
+        dest = (u32)(((uintptr_t)D_80036414->animBufferPtr2 + 15u) & ~(uintptr_t)15u);
 #else
         dest = ((u32) (D_80036414->animBufferPtr2 + 15) >> 4) * 16;
 #endif
