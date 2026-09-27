@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<gameList>
+  <game>
+    <path>./R36S Hardware Probe.sh</path>
+    <name>R36S Hardware Probe</name>
+    <desc>Deep RK3326/Mali-G31 kernel, DRM, GBM, EGL, OpenGL ES, OpenGL and Vulkan qualification probe.</desc>
+    <genre>Utility</genre>
+    <players>1</players>
+  </game>
+</gameList>
