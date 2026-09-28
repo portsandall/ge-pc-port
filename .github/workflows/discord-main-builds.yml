@@ -28,6 +28,14 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Maintainer CI gate
+        shell: bash
+        run: |
+          if [ "${GITHUB_REPOSITORY_OWNER}" != "bitflipunix-re" ]; then
+            echo "Official CI is restricted to the upstream maintainer repository."
+            exit 1
+          fi
+
       - name: Build verified main summary
         if: ${{ env.DISCORD_WEBHOOK != '' }}
         shell: bash
