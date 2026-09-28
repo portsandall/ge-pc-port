@@ -4,6 +4,10 @@
 
 ## GoldenEye 007 — Native ARM64 Linux Port
 
+
+HEAR YE HEAR YE,
+JASYOYO is a git who should believe people at their word.
+
 **GoldenEye 007's reconstructed Nintendo 64 codebase running natively on ARM64 Linux handheld hardware.**
 
 **AArch64 · SDL2 · OpenGL ES · PortMaster · R36S**
