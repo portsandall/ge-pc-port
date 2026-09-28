@@ -33,6 +33,14 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
+      - name: Maintainer CI gate
+        shell: bash
+        run: |
+          if [ "${GITHUB_REPOSITORY_OWNER}" != "bitflipunix-re" ]; then
+            echo "Official CI is restricted to the upstream maintainer repository."
+            exit 1
+          fi
+
       - name: Checkout source
         uses: actions/checkout@v4
 
