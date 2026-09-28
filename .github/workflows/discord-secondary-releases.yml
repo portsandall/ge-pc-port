@@ -1,0 +1,120 @@
+name: Discord secondary green releases
+
+on:
+  workflow_run:
+    workflows:
+      - GoldenEye AArch64 R36S GLES Build
+    branches:
+      - main
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  notify-secondary-release:
+    # Outbound-only release notifier:
+    # main push + successful full build + explicit [beta-release] commit marker.
+    # Discord cannot trigger repository actions through this workflow.
+    if: ${{ github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    env:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SECONDARY_RELEASES }}
+      SHA: ${{ github.event.workflow_run.head_sha }}
+      RUN_ID: ${{ github.event.workflow_run.id }}
+      RUN_URL: ${{ github.event.workflow_run.html_url }}
+      REPOSITORY: ${{ github.repository }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_TAG: r36s-beta-2026-09-26
+
+    steps:
+      - name: Confirm this green build published a beta release
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api -H "Accept: application/vnd.github+json" \
+            "repos/$REPOSITORY/commits/$SHA" > /tmp/commit.json
+
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          data = json.load(open("/tmp/commit.json", encoding="utf-8"))
+          message = ((data.get("commit") or {}).get("message") or "")
+          print("release=yes" if "[beta-release]" in message else "release=no")
+          PY
+
+      - name: Verify release exists
+        if: ${{ steps.gate.outputs.release == 'yes' && env.DISCORD_WEBHOOK != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release view "$RELEASE_TAG" --repo "$REPOSITORY" --json url,tagName,name > /tmp/release.json
+
+      - name: Build secondary release message
+        if: ${{ steps.gate.outputs.release == 'yes' && env.DISCORD_WEBHOOK != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > /tmp/discord-secondary.json
+          import json
+          import os
+
+          rel = json.load(open("/tmp/release.json", encoding="utf-8"))
+          sha = os.environ["SHA"]
+          run_url = os.environ["RUN_URL"]
+          repo = os.environ["REPOSITORY"]
+          release_url = rel.get("url") or f"https://github.com/{repo}/releases/tag/{os.environ['RELEASE_TAG']}"
+
+          marker = (
+              f"ARM-GE-PROVENANCE:v1 repo={repo} sha={sha} "
+              f"run={os.environ['RUN_ID']}"
+          )
+
+          payload = {
+              "username": "Spidey Bot",
+              "content": "",
+              "embeds": [{
+                  "title": "GREEN RELEASE PUBLISHED",
+                  "url": release_url,
+                  "description": (
+                      f"Verified R36S/AArch64 release from main at \`{sha[:7]}\`.\n"
+                      "The full build, semantic audit, ELF verification and package validation passed before publication."
+                  ),
+                  "color": 0x57F287,
+                  "fields": [
+                      {
+                          "name": "Release",
+                          "value": f"[{rel.get('name') or rel.get('tagName')}]({release_url})",
+                          "inline": False
+                      },
+                      {
+                          "name": "Build",
+                          "value": f"[GitHub Actions run]({run_url})",
+                          "inline": True
+                      },
+                      {
+                          "name": "Passive provenance",
+                          "value": f"\`{marker}\`",
+                          "inline": False
+                      }
+                  ],
+                  "footer": {"text": "Secondary release notifier · outbound only"}
+              }],
+              "allowed_mentions": {"parse": []}
+          }
+          print(json.dumps(payload))
+          PY
+
+      - name: Post green release to secondary Discord webhook
+        if: ${{ steps.gate.outputs.release == 'yes' && env.DISCORD_WEBHOOK != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body \
+            --retry 3 \
+            --retry-delay 2 \
+            -H 'Content-Type: application/json' \
+            -d @/tmp/discord-secondary.json \
+            "$DISCORD_WEBHOOK"
