@@ -160,6 +160,19 @@ jobs:
       - name: Strip beta binary
         run: aarch64-linux-gnu-strip --strip-unneeded build/arm64/ge007.aarch64
 
+      - name: Stamp passive provenance canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker="ARM-GE-PROVENANCE:v1 repo=${GITHUB_REPOSITORY} sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} attempt=${GITHUB_RUN_ATTEMPT}"
+          printf '%s\n' "$marker" | tee build/arm64/ge007.provenance.txt
+          aarch64-linux-gnu-objcopy \
+            --add-section .note.ge_provenance=build/arm64/ge007.provenance.txt \
+            --set-section-flags .note.ge_provenance=noload,readonly \
+            build/arm64/ge007.aarch64
+          aarch64-linux-gnu-readelf -S --wide build/arm64/ge007.aarch64 | grep -F '.note.ge_provenance'
+          strings build/arm64/ge007.aarch64 | grep -F "$marker"
+
       - name: Verify binary
         run: |
           file build/arm64/ge007.aarch64
@@ -198,6 +211,7 @@ jobs:
             dist/ge007.zip.list
             build/arm64/ge007.aarch64
             build/arm64/ge007.elf-header.txt
+            build/arm64/ge007.provenance.txt
             build/arm64/ge007.sha256
           if-no-files-found: error
 
