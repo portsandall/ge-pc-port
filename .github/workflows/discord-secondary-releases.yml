@@ -30,6 +30,14 @@ jobs:
       RELEASE_TAG: r36s-beta-2026-09-26
 
     steps:
+      - name: Maintainer CI gate
+        shell: bash
+        run: |
+          if [ "${GITHUB_REPOSITORY_OWNER}" != "bitflipunix-re" ]; then
+            echo "Official CI is restricted to the upstream maintainer repository."
+            exit 1
+          fi
+
       - name: Confirm this green build published a beta release
         id: gate
         shell: bash
