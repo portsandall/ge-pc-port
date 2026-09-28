@@ -21,6 +21,14 @@ jobs:
       SOURCE_RUN_ID: "36231558781"
       ARTIFACT_NAME: ge007-r36s-portmaster-alpha
     steps:
+      - name: Maintainer CI gate
+        shell: bash
+        run: |
+          if [ "${GITHUB_REPOSITORY_OWNER}" != "bitflipunix-re" ]; then
+            echo "Official CI is restricted to the upstream maintainer repository."
+            exit 1
+          fi
+
       - name: Download verified build artifact
         uses: actions/download-artifact@v4
         with:
