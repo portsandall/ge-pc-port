@@ -55,6 +55,36 @@ jobs:
       - name: Android arm64-v8a preflight
         run: bash android/preflight.sh
 
+      - name: Fetch SDL2 headers
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          ref: SDL2
+          path: external/SDL
+          fetch-depth: 1
+
+      - name: Configure GE Android core objects
+        shell: bash
+        run: |
+          cmake -S work/goldeneye-pc-port -B build/android-core -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI="${ANDROID_ABI}" \
+            -DANDROID_PLATFORM="android-${ANDROID_API}" \
+            -DANDROID_STL=c++_shared \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DROMID=ntsc-final \
+            -DGE_BETA_RELEASE=ON \
+            -DGE_DEV_PROBES=OFF \
+            -DGE_ANDROID_OBJECT_ONLY=ON \
+            -DSDL2_INCLUDE_DIR="${GITHUB_WORKSPACE}/external/SDL/include" \
+            2>&1 | tee build/android-configure.log
+
+      - name: Compile GE Android core objects
+        shell: bash
+        run: |
+          cmake --build build/android-core --target ge007_android_objects -j2 \
+            2>&1 | tee build/android-compile.log
+
       - name: Record port baseline
         shell: bash
         run: |
