@@ -5,7 +5,7 @@ This directory is the Android port workspace for the preserved ARM64 GoldenEye P
 ## Target
 
 - Android arm64-v8a
-- Android 10+ initially (API 29)
+- Android 11+ initially (API 30)
 - Android NDK / Clang
 - SDL2 Android frontend
 - OpenGL ES renderer
