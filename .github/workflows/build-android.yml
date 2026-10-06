@@ -66,6 +66,7 @@ jobs:
       - name: Configure GE Android core objects
         shell: bash
         run: |
+          mkdir -p build
           cmake -S work/goldeneye-pc-port -B build/android-core -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI="${ANDROID_ABI}" \
