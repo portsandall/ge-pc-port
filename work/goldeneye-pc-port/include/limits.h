@@ -1,3 +1,7 @@
+#if defined(PORT) && defined(__ANDROID__)
+/* Android libc requires its own limits (including SSIZE_MAX). */
+#include_next <limits.h>
+#else
 #ifndef _LIMITS_H
 #define _LIMITS_H
 
@@ -302,3 +306,5 @@ extern "C"
 #endif
 #endif /* !__LIMITS_H__ */
 #endif
+
+#endif /* PORT && __ANDROID__ */
