@@ -51,7 +51,7 @@ s8 D_8004EC30 = 0x0;
  * ambiguous during lookup. This is a local debug/input alias, so use a
  * preprocessor alias on Clang while retaining the original weak symbol for
  * GCC/IDO builds. */
-#define spec_keyboard_row_caps_z_x_c_v spec_keyboard_buffer
+#define spec_keyboard_row_caps_z_x_c_v (spec_keyboard_buffer[0])
 #else
 extern u8 spec_keyboard_row_caps_z_x_c_v;
 #pragma weak spec_keyboard_row_caps_z_x_c_v = spec_keyboard_buffer
