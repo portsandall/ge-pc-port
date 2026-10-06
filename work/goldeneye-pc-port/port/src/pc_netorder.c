@@ -26,7 +26,11 @@ unsigned short ntohs(unsigned short v)
     return (unsigned short)((v >> 8) | (v << 8));
 }
 
+#if defined(__ANDROID__)
+u32 ntohl(u32 v)
+#else
 unsigned long ntohl(unsigned long v)
+#endif
 {
     return __builtin_bswap32((unsigned int)v);
 }
