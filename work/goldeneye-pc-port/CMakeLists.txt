@@ -401,22 +401,6 @@ if(ZLIB_INCLUDE_DIR)
 endif()
 list(APPEND LIBS "${ZLIB_LIBRARY}")
 
-# Real <zlib.h> for port/src/rzdecomp.c (which backs decompressdata() with real
-# zlib). The game's own src/game/zlib.h sits on the -I path and shadows a plain
-# `#include <zlib.h>` in a port TU, so generate an absolute-path include (same
-# trick as hoststring.h). Prefer find_package(ZLIB)'s dir; fall back to the
-# toolchain include dir (MinGW layout: bin/../include), where
-# mingw-w64-x86_64-zlib installs zlib.h.
-set(PORT_REAL_ZLIB_H "${ZLIB_INCLUDE_DIR}/zlib.h")
-if(NOT EXISTS "${PORT_REAL_ZLIB_H}")
-  set(PORT_REAL_ZLIB_H "${_PORT_GCC_DIR}/../include/zlib.h")
-endif()
-if(NOT EXISTS "${PORT_REAL_ZLIB_H}")
-  message(FATAL_ERROR "Cannot locate the host zlib.h needed by port/src/rzdecomp.c")
-endif()
-configure_file(
-  "${CMAKE_SOURCE_DIR}/port/include/realzlib.h.in"
-  "${CMAKE_BINARY_DIR}/port/include/realzlib.h" @ONLY)
 
 if(NOT GL_LIBRARY)
   if(WIN32)
@@ -441,6 +425,23 @@ if(NOT EXTRA_LIBRARIES)
 endif()
 list(APPEND LIBS "${EXTRA_LIBRARIES}")
 endif()
+
+# Real <zlib.h> for port/src/rzdecomp.c (which backs decompressdata() with real
+# zlib). The game's own src/game/zlib.h sits on the -I path and shadows a plain
+# `#include <zlib.h>` in a port TU, so generate an absolute-path include (same
+# trick as hoststring.h). Prefer find_package(ZLIB)'s dir; fall back to the
+# toolchain include dir (MinGW layout: bin/../include), where
+# mingw-w64-x86_64-zlib installs zlib.h.
+set(PORT_REAL_ZLIB_H "${ZLIB_INCLUDE_DIR}/zlib.h")
+if(NOT EXISTS "${PORT_REAL_ZLIB_H}")
+  set(PORT_REAL_ZLIB_H "${_PORT_GCC_DIR}/../include/zlib.h")
+endif()
+if(NOT EXISTS "${PORT_REAL_ZLIB_H}")
+  message(FATAL_ERROR "Cannot locate the host zlib.h needed by port/src/rzdecomp.c")
+endif()
+configure_file(
+  "${CMAKE_SOURCE_DIR}/port/include/realzlib.h.in"
+  "${CMAKE_BINARY_DIR}/port/include/realzlib.h" @ONLY)
 
 # ----------------------------------------------------------------------------
 # Sources
