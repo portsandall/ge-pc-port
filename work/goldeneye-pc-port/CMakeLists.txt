@@ -362,7 +362,7 @@ endif()
 # port/shim first: PC-only shadow headers (bondtypes.h, bondconstants.h,
 # PR/gbi.h) that fix N64-compiler assumptions without touching src/ or
 # include/. Inert in the N64 build (its Makefile never sees port/shim).
-include_directories(
+set(GE_PROJECT_INCLUDE_DIRS
   "${CMAKE_SOURCE_DIR}/port/shim"
   "${CMAKE_SOURCE_DIR}"
   "${CMAKE_SOURCE_DIR}/include"
@@ -374,6 +374,15 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/port/include"
   "${CMAKE_BINARY_DIR}/port/include"
 )
+if(ANDROID)
+  foreach(_GE_INCLUDE IN LISTS GE_PROJECT_INCLUDE_DIRS)
+    include_directories("$<$<COMPILE_LANGUAGE:C>:${_GE_INCLUDE}>")
+    # libc++ wrappers must precede project C headers for C++ translation units.
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:SHELL:-idirafter ${_GE_INCLUDE}>")
+  endforeach()
+else()
+  include_directories(${GE_PROJECT_INCLUDE_DIRS})
+endif()
 
 # ----------------------------------------------------------------------------
 # Dependencies: SDL2, zlib, OpenGL
