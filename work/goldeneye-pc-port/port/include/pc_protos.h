@@ -61,7 +61,11 @@ void assert();
  * <windows.h> later redeclare compatibly; on LLP64 u_long is 64-bit and the
  * high bits are unused for the 16/32-bit values game code passes. */
 unsigned short ntohs(unsigned short);
+#if defined(__ANDROID__)
+u32 ntohl(u32);
+#else
 unsigned long ntohl(unsigned long);
+#endif
 #endif
 
 int GetCurrentThreadStackLimits();
