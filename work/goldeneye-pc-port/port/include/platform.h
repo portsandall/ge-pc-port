@@ -12,7 +12,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(__ANDROID__)
+  #define PLATFORM_ANDROID 1
+#elif defined(_WIN32) || defined(_WIN64)
   #define PLATFORM_WINDOWS 1
 #elif defined(__APPLE__)
   #include <TargetConditionals.h>
