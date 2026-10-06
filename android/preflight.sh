@@ -50,4 +50,18 @@ file /tmp/geand-android-smoke.o
 
 echo
 echo "Android NDK arm64-v8a toolchain is operational."
-echo "Next source milestone: remove GCC-only struct inheritance dependency while preserving layouts."
+cat > /tmp/geand-inherits.c <<'EOF'
+struct A { int x; };
+struct B { struct A; int y; };
+int main(void) { struct B b = {0}; b.x = 7; return b.x != 7; }
+EOF
+
+if "$CLANG" -std=gnu11 -fms-extensions /tmp/geand-inherits.c -o /tmp/geand-inherits >/tmp/geand-inherits.log 2>&1; then
+  echo "NDK Clang anonymous tagged-member probe: supported with -fms-extensions"
+else
+  echo "NDK Clang anonymous tagged-member probe: unsupported"
+  cat /tmp/geand-inherits.log
+  exit 42
+fi
+
+echo "Next source milestone: compile the GE source with Android-specific CMake settings."
