@@ -235,7 +235,7 @@ if(TARGET_IS_64BIT)
   add_definitions(-DPLATFORM_64BIT=1)
 endif()
 if(ANDROID)
-  add_definitions(-DPLATFORM_ANDROID=1 -D__ANDROID_API__=${ANDROID_PLATFORM_LEVEL})
+  add_definitions(-DPLATFORM_ANDROID=1)
 endif()
 
 # The decomp is big-endian N64 code with unaligned accesses; these flags are
@@ -336,7 +336,7 @@ endif()
 # base at startup.
 if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-dynamicbase")
-elseif(UNIX AND NOT APPLE)
+elseif(UNIX AND NOT APPLE AND NOT ANDROID)
   # Linux equivalent of the ASLR-off requirement above: dram_syms.s defines
   # absolute symbols at 0x70000000 referenced through pointer-typed externs. A
   # PIE build (GCC's default on modern distros) emits GOT/relative relocations
@@ -605,7 +605,7 @@ list(PREPEND SRC_ENGINE "${CMAKE_SOURCE_DIR}")
 # reconstructed game code on the established RelWithDebInfo/-O2 behavior,
 # but let this isolated port layer use -O3. Deliberately no -ffast-math:
 # matrix/clip/fog semantics remain IEEE-compatible.
-if(TARGET_ARCH MATCHES "aarch64" AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(TARGET_ARCH MATCHES "aarch64" AND NOT ANDROID AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
   # RK3326 in the R36S is Cortex-A35. Tune scheduling for that core while
   # keeping the executable on the normal AArch64 ISA baseline, so the same
   # artifact remains usable on compatible ARM64 handhelds.
