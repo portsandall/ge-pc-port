@@ -11,7 +11,8 @@ echo "repo: $ROOT"
 
 HOST_TAG=linux-x86_64
 TOOLCHAIN="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG"
-API="${ANDROID_API:-30}"\nCLANG="$TOOLCHAIN/bin/aarch64-linux-android${API}-clang"
+API="${ANDROID_API:-30}"
+CLANG="$TOOLCHAIN/bin/aarch64-linux-android${API}-clang"
 CLANGXX="$TOOLCHAIN/bin/aarch64-linux-android${API}-clang++"
 
 test -x "$CLANG"
