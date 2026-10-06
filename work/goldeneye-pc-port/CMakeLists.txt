@@ -311,6 +311,10 @@ if(ANDROID)
   # Microsoft extensions. This preserves promoted field access/layout without
   # rewriting bondtypes.h.
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-fms-extensions>)
+  # Android's toolchain injects -Werror=format-security. The reconstructed
+  # game contains legacy non-literal printf-style calls that are warnings on
+  # the existing desktop/R36S builds; keep them visible without blocking P1.
+  add_compile_options(-Wno-error=format-security)
 elseif(NOT MINGW)
   add_compile_options($<$<COMPILE_LANGUAGE:C>:-fplan9-extensions>)
   # GCC 14 promoted several long-standing C leniencies to hard errors
